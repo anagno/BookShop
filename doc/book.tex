@@ -146,6 +146,7 @@
 \end{figure}
 
 \section{Φάση: Έναρξη}
+\label{section:inception}
 
 Η φάση της έναρξης (αγγλ. \en{inception}) είναι η πρώτη φάση της Unified Process (UP), στην οποία οι κύριες απαιτήσεις του έργου ανακαλύπτονται και έκταση του συστήματος γίνεται κατανοητή. Το προϊόν της φάσης αυτής είναι ένα προκαταρκτικό εννοιολογικό μοντέλο, ανάλυση απαιτήσεων του προκαταρκτικού εννοιολογικού μοντέλου, συνήθως με την μορφή ενός καταλόγου των περιπτώσεων υψηλού επιπέδου χρήσης και ένα χρονοδιάγραμμα (που σε αυτή την εργασία κρίνεται σκόπιμο να μην υλοποιηθεί)\cite{wazlawick2014object}. Ακόμα θα δοθεί ένα πρώτο διάγραμμα τάξεων το οποίο θα δείχνει την υλοποίηση των περιπτώσεων χρήσης.
 
@@ -372,15 +373,87 @@
 \section{Φάση: Εκπόνηση Μελέτης}
 \label{section: Elaboration}
 
-%The Elaboration phase includes a more detailed requirements analysis, which is performed by expanding the use cases, that is, writing the sequence of steps that characterizes each of their possible flows. The conceptual model is refined after each use case is expanded. Depending on the priority of the use cases, it is expected that the number of changes applied to the software architecture decreases as the project proceeds during Elaboration \cite{wazlawick2014object}.
+Η φάση της εκπόνησης της μελέτης (αγγλ. \en{elaboration phase}) περιλαμβάνει μία πιο λεπτομερή ανάλυση απαιτήσεων, η οποία πραγματοποιείται με την επέκταση των περιπτώσεων χρήσης, δηλαδή, γράφοντας την αλληλουχία των βημάτων που χαρακτηρίζει κάθε μία από τις πιθανές περιπτώσεις τους. Επομένως το εννοιολογικό μοντέλο εξευγενισμέται μετά την ανάλυση των περιπτώσεων χρήσης \cite{wazlawick2014object}.  
+	
+Η φάση της εκπόνησης της μελέτης είναι επαναληπτική. Σε κάθε επανάληψη αναπτύσσονται μία ή περισσότερες περιπτώσεις χρήσης και σε κάθε επανάληψη, οι πληροφορίες που εξάγονται από τις περιπτώσεις χρήσης ενσωματώνονται στο τελικό προϊόν. Στην φάση εκπόνησης αντιμετωπίζονται οι πιο πολύπλοκες περιπτώσεις χρήσεις \cite{wazlawick2014object}.
 
-%The Elaboration and Construction phases are performed in iterations. An iteration may have as an objective developing one or more use cases, implementing change requests, or mitigating selected risks. During an iteration, use cases are expanded and the information learned from them is incrementally incorporated in the product. It is expected that the Elaboration phase deals with the major risks of the system, as well as with the more complex or risky use cases that affect the system architecture significantly. On the other hand, the Construction phase concentrates on producing code for the whole application and implementing change requests \cite{wazlawick2014object}.
+\subsection{Διαγράμματα περιπτώσεων χρήσης}
+
+Σε συνέχεια από την ενότητα \ref{section:inception} θα συνεχιστεί η ανάλυση απαιτήσεων με εμβάθυνση στις περιπτώσεις χρήσης. Συγκεκριμένα θα αναλυθούν οι ενέργειες που θα πρέπει να εκτελούνται από τους ενεργοποιούς του πληροφοριακού συστήματος 
+
+\begin{landscape}
+\begin{figure}
+\begin{center}
+\resizebox*{1.6\textwidth}{!}{
+\includegraphics{images/UsecaseDiagramUsers.png}}
+\caption{Το διάγραμμα περιπτώσεων χρήσης των χρηστών}
+\label{fig:usecase_diagram_Users}
+\end{center}
+\end{figure}
+\end{landscape}
+%http://creately.com/diagram/example/hgmsd6in/Library+information+system
+%http://www.programsformca.com/2012/03/uml-diagrams-for-library-management.html
+
+\subsection{Διάγραμμα δραστηριότητας}
+
+Ένα διάγραμμα δραστηριότητας αναπαριστά την κατάσταση εκτέλεσης ενός μηχανισμού σαν μία σειρά βημάτων που ομαδοποιούνται σειριακά σαν παράληλες διακλαδώσεις ροής ελέγχου \cite{virvou_uml}. Βοηθούν στην αποτύπωση λεπτομερειών που δεν φαίνονται στα διαγράμματα των περιπτώσεων χρήσης.
+
+Στο σχήμα \ref{fig:activity_diagram_rent_book_basic}
+
+\begin{figure}
+\begin{center}
+\resizebox*{!}{!}{
+\includegraphics{images/ActivityDiagramRentBookBasic.png}}
+\caption{Το βασικό διάγραμμα δραστηριότητας για την ενοικίαση ενός βιβλίου}
+\label{fig:activity_diagram_rent_book_basic}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\resizebox*{!}{!}{
+\includegraphics{images/ActivityDiagramReturnBookBasic.png}}
+\caption{Το βασικό διάγραμμα δραστηριότητας για την επιστροφή ενός βιβλίου}
+\label{fig:activity_diagram_return_book_basic}
+\end{center}
+\end{figure}
+
+
+\subsection{Διαγράμματα καταστάσεων}
+
+Τα διαγράμματα καταστάσεων αναπαριστούν μηχανές καταστάσεων από την άποψη των καταστάσεων και των μεταβάσεων. Όπως και τα διαγράμματα δραστηριότητας, είναι διαγράμματα συμπεριφοράς, μόνο που αντί να μοντελοποιούν δραστηριότητες, μοντελοποιούν τις καταστάσεις του συστήματος, ενός ενεργοποιού ή μίας οντότητας σε μία συγκεκριμένη στιγμή \cite{virvou_uml,wazlawick2014object}.
+
+\begin{figure}
+\begin{center}
+\resizebox*{!}{!}{
+\includegraphics{images/StatechartDiagramBook.png}}
+\caption{Διάγραμμα καταστάσεων για ένα βιβλίο}
+\label{fig:statechart_diagram_book}
+\end{center}
+\end{figure}
+
 
 \section{Φάση: Κατασκευή}
 
 %During the Construction phase most of the code production and test activities are performed. It is expected that the Elaboration phase produces an architecture sufficiently stable so that its refactoring will be minimized during this phase \cite{wazlawick2014object}.
 
 %The Elaboration and Construction phases are performed in iterations. An iteration may have as an objective developing one or more use cases, implementing change requests, or mitigating selected risks. During an iteration, use cases are expanded and the information learned from them is incrementally incorporated in the product. It is expected that the Elaboration phase deals with the major risks of the system, as well as with the more complex or risky use cases that affect the system architecture significantly. On the other hand, the Construction phase concentrates on producing code for the whole application and implementing change requests \cite{wazlawick2014object}.
+
+\subsection{Διάγραμματα δραστηριότητας}
+
+Σε συνέχεια από την ενότητα \ref{section: Elaboration} έχουμε:
+
+Στο σχήμα \ref{fig:activity_diagram_rent_book_basic} φαίνετε το εκτενές σχήμα του διαγράμματος δραστηριότητας της ενοικίασης ενός βιβλίου
+
+\begin{figure}
+\begin{center}
+\resizebox*{!}{!}{
+\includegraphics{images/ActivityDiagramRentBookExtended.png}}
+\caption{Το διάγραμμα δραστηριότητας για την ενοικίαση ενός βιβλίου}
+\label{fig:activity_diagram_rent_book_extended}
+\end{center}
+\end{figure}
+%https://www.lucidchart.com/pages/activity-diagram-for-library-management-system-UML
 
 \section{Ανάλυση και Σχεδίαση}
 
