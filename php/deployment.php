@@ -1,6 +1,7 @@
 <?php
+
 /**
-* This script is for easily deploying updates to Github repos to your local server. It will automatically git clone or
+ * This script is for easily deploying updates to Github repos to your local server. It will automatically git clone or
 * git pull in your repo directory every time an update is pushed to your $BRANCH (configured below).
 *
 * Read more about how to use this script at http://behindcompanies.com/2014/01/a-simple-script-for-deploying-code-with-githubs-webhooks/
@@ -25,20 +26,20 @@ $BRANCH             = "master";
 
 
 // Only respond to POST requests from Github
-if ( $_SERVER['HTTP_X_GITHUB_EVENT'] == 'push' ) 
+if ( $_SERVER['HTTP_X_GITHUB_EVENT'] == 'push' )
 {
 	if( file_exists($LOCAL_REPO) )
 	{
 		// If there is already a repo, just run a git pull to grab
 		// the latest changes
 		shell_exec("cd {$LOCAL_REPO} && git pull");
-		die("done " . mktime());		
+		die("done " . mktime());
 	}
-	else 
+	else
 	{
 		// If the repo does not exist, then clone it into the parent directory
 		shell_exec("cd {$LOCAL_ROOT} && git clone {$REMOTE_REPO}");
-		die("done " . mktime());		
+		die("done " . mktime());
 	}
 }
-?> 
+?>
