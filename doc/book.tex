@@ -455,6 +455,88 @@
 \end{figure}
 %https://www.lucidchart.com/pages/activity-diagram-for-library-management-system-UML
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Υλοποίηση της Βάσης Δεδομένων}
+
+Σε αυτή την ενότητα περιγράφεται η υλοποίηση της βάσης δεδομένων στο ΣΔΒΔ της MariaDB η οποία είναι ένα fork της MySQL.
+
+\subsection{Δημιουργία ειδικού χρήστη}
+
+Σαν πρώτο βήμα είναι η δημιουργία ειδικού χρήστη για την βάση έτσι ώστε να μην χρησιμοποιούμε συνέχεια τον υπερχρήστη. Για την επίτευξη αυτού του σκοπού πληκτρολογούμε στο terminal τα παρακάτω: 
+
+\begin{minted}{bash}
+$ mysql --user=root --password
+Enter password: 
+\end{minted} 
+%%$
+
+Και αφού έχουμε μπει στην βάση δημιουργούμε ένα καινούργιο χρήστη και μία νέα βάση και δίνουμε στον χρήστη την δυνατότητα να την τροποποιεί. Όλα αυτά επιτυγχάνονται με τα παρακάτω:
+
+\begin{minted}[breaklines=true]{mysql}
+MariaDB [(none)]> CREATE USER 'tme119'@'localhost' IDENTIFIED BY 'tme119_password' ;
+MariaDB [(none)]> GRANT USAGE ON *.* TO 'tme119'@'localhost' IDENTIFIED BY 'tme119_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
+MariaDB [(none)]> CREATE DATABASE `tme119` CHARACTER SET utf8 COLLATE utf8_general_ci;
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON `tme119`.* TO 'tme119'@'localhost';
+\end{minted}
+
+Ο λόγος για τον οποίο δημιουργούμε έναν καινούργιο χρήστη είναι για λόγους ασφαλείας έτσι ώστε να μην χρησιμοποιούμε συνέχεια τον υπερχρήστη. Ακόμα στην νέα βάση προτιμήθηκε να χρησιμοποιηθεί το utf8 έτσι ώστε η βάση μας να υποστηρίζει και τα ελληνικά. Μετά την δημιουργία του καινούργιου χρήστη ξαναμπαίνουμε στο ΣΔΒΔ χρησιμοποιώντας τον καινούργιο χρήστη:
+
+\begin{minted}{bash}
+$ mysql --user=tme119 --password
+Enter password: 
+\end{minted} 
+
+%%$
+
+Παρατηρούμε ότι στις μόνες βάσεις που έχει πρόσβαση ο συγκεκριμένος χρήστης είναι η βάση που δημιουργήσαμε πριν και η βάση που είναι δημιουργημένη από την MariaDB και περιέχει πληροφορίες για την βάση.
+
+\begin{minted}[breaklines=true]{mysql}
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| tme119             |
++--------------------+
+2 rows in set (0.00 sec)
+\end{minted}
+
+Οι υπόλοιπες αλλαγές θα γίνουν μέσω της php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Ανάλυση και Σχεδίαση}
 
 \subsection{Περιπτώσεις χρήσης και διαγράμματα περιπτώσεων χρήσης}
