@@ -1,5 +1,5 @@
 <?php
-require_once "config.php";
+require_once "../config/database.php";
 
 /**  
  * Ο κώδικας έχει παρθεί από το βιβλίο Beginning php 5.3 - Matt Doyle
