@@ -712,16 +712,16 @@ MariaDB [tme119]> describe categories;
 
 \captionof{listing}{Δημιουργία του πίνακα authors}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE authors (id INT UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, PRIMARY KEY (id));
+MariaDB [book]> CREATE TABLE authors (id INT UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(50) NOT NULL, PRIMARY KEY (id));
 Query OK, 0 rows affected (0.08 sec)
 
 MariaDB [tme119]> describe authors;
-+-------+------------------+------+-----+---------+-------+
-| Field | Type             | Null | Key | Default | Extra |
-+-------+------------------+------+-----+---------+-------+
-| id    | int(10) unsigned | NO   | PRI | NULL    |       |
-| name  | varchar(50)      | NO   |     | NULL    |       |
-+-------+------------------+------+-----+---------+-------+
++-------+------------------+------+-----+---------+----------------+
+| Field | Type             | Null | Key | Default | Extra          |
++-------+------------------+------+-----+---------+----------------+
+| id    | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(50)      | NO   |     | NULL    |                |
++-------+------------------+------+-----+---------+----------------+
 2 rows in set (0.00 sec)
 
 \end{minted}
