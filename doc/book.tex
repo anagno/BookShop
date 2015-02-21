@@ -27,8 +27,9 @@
 \tableofcontents
 \listoftables
 \listoffigures
-%\renewcommand\listoflistingscaption{Κατάλογος πηγαίου κώδικα}
-%\listoflistings
+\renewcommand\listoflistingscaption{Κατάλογος πηγαίου κώδικα}
+\renewcommand\listingscaption{Πηγαίος κώδικας}
+\listoflistings
 \newpage
 
 %\pagestyle{headings}
@@ -479,6 +480,113 @@
 
 Σε αυτή την ενότητα περιγράφεται η υλοποίηση της βάσης δεδομένων στο ΣΔΒΔ της MariaDB η οποία είναι ένα fork της MySQL.
 
+\subsection{Εννοιολογικό μοντέλο}
+
+Στο διάγραμμα \ref{fig:ER:diagram} φαίνονται μόνο τα πιο βασικά πεδία. Όλα τα πεδία φαίνονται αναλυτικά στο σχήμα \ref{fig:RelationalModel:diagram}.
+
+\begin{table}
+\begin{center}
+  \begin{tabular}{|m{0.20\textwidth}|m{0.60\textwidth}|}
+    \hline
+     \vspace{0.3cm}
+     \resizebox*{0.20\textwidth}{!}{
+     \includegraphics{images/entity.jpeg}}
+     & Ορθογώνια: οντότητες. \\ \hline
+
+     \vspace{0.3cm}
+     \resizebox*{0.20\textwidth}{!}{
+     \includegraphics{images/relationship.jpeg}}
+     & Ρόμβοι: συσχετίσεις. \\ \hline
+
+     \vspace{0.3cm}
+     \resizebox*{0.20\textwidth}{!}{
+     \includegraphics{images/line.jpeg}}
+     & Γραμμές: συνδέουν χαρακτηριστικά με οντότητες, οντότητες με συσχετίσεις. \\ \hline
+
+     \vspace{0.3cm}
+     %\resizebox*{0.20\textwidth}{!}{
+     \center
+     \includegraphics{images/characteristicl.jpeg}%}
+     & Ελλείψεις: χαρακτηριστικά. \\ \hline
+
+     \vspace{0.3cm}
+     \resizebox*{0.20\textwidth}{!}{
+     \includegraphics{images/characteristicl_many.jpeg}}
+     & Διπλές ελλείψεις: πλειότιμα χαρακτηριστικά. \\ \hline
+
+%     \vspace{0.3cm}
+     %\resizebox*{0.20\textwidth}{!}{
+     \center
+%     \includegraphics{images/characteristicl_many.jpeg}}
+%     & Διακεκομμένες ελλείψεις: εξαρτημένα χαρακτηριστικά. \\ \hline
+
+     \vspace{0.3cm}
+     %\resizebox*{0.20\textwidth}{!}{
+     \center
+     \includegraphics{images/key.jpeg}%}
+     & Υπογραμμίσεις: πρωτεύοντα κλειδιά. \\ \hline
+
+     \vspace{0.3cm}
+     \resizebox*{0.20\textwidth}{!}{
+     \includegraphics{images/entity_weak.jpeg}}
+     & Διπλό ορθογώνιο: Αδύναμο σύνολο οντοτήτων. \\ \hline
+
+     \vspace{0.3cm}
+     \resizebox*{0.20\textwidth}{!}{
+     \includegraphics{images/isa.jpeg}}
+     & Τρίγωνο: Εξιδίκευση. \\ \hline
+  \end{tabular}
+\caption{Τα εικονίδια του διαγράμματος οντοτήτων συσχετίσεων.}
+\label{table:icons}
+\end{center}
+\end{table}
+
+
+\begin{landscape}
+\begin{figure}
+\begin{center}
+\resizebox*{!}{\textwidth}{
+\includegraphics{images/ERDiagram.png}}
+\caption{Διάγραμμα οντοτήτων - συσχετίσεων}
+\label{fig:ER:diagram}
+\end{center}
+\end{figure}
+\end{landscape}
+
+\subsection{Λογικός σχεδιασμός}
+
+Ο λογικός σχεδιασμός είναι η διαδικασία μετατροπής ενός εννοιολογικού μοντέλου (διαισθητικής περιγραφής) σε τυπικά σχήματα εκφρασμένα στο επιλεγμένο (υποστηριζόμενο από το ΣΔΒΔ) μοντέλο δεδομένων (π.χ. Σχεσιακό μοντέλο) \cite{theodoridis_class_notes}.
+
+\subsection{Μετατροπή μοντέλου οντοτήτων - συσχετίσεων σε σχεσιακό σχή\-μα}
+
+Οι κανόνες που χρησιμοποιούνται για την μετατροπή του μοντέλου οντοτήτων - συσχετίσεων σε σχεσιακό σχήμα φαίνονται παρακάτω \cite{theodoridis_class_notes}:
+
+\begin{description}
+
+  \item[Οντότητες:] Ένα ισχυρό σύνολο οντοτήτων μετατρέπεται σε πίνακα (με τα ίδια χαρακτηριστικά). Ένα αδύναμο σύνολο οντοτήτων γίνεται πίνακας που περιλαμβάνει μια στήλη για το πρωτεύον κλειδί του ισχυρότερου συνόλου οντοτήτων που το ταυτοποιεί. 
+  \item[Συσχετίσεις 1:1 :] Οι συσχετίσεις 1:1 μπορούν να αναπαρασταθούν είτε προσθέτοντας το πρωτεύον κλειδί της μία πλευράς ως επιπλέον χαρακτηριστικό στον πίνακα της άλλη πλευράς είτε δημιουργώντας ένα νέο πίνακα που έχει τα κλειδιά των δύο πινάκων.
+  \item[Συσχετίσεις 1:Ν :] Οι συσχετίσεις 1:Ν μπορούν να αναπαρασταθούν απλά με την προσθήκη ενός επιπλέον χαρακτηριστικού στην πλευρά Ν (το πρωτεύον κλειδί τις πλευράς 1). Εάν η συμμετοχή στην πλευρά Ν είναι μερική, μπορεί να προκύψει μία στήλη που να έχει πολλές κενές τιμές. Οπότε η δημιουργία ενός νέου πίνακα μπορεί να συμφέρει.
+  \item[Συσχετίσεις Μ:Ν :] Ένα σύνολο συσχετίσεων M:N αναπαριστάται ως πίνακας με στήλες για τα πρωτεύοντα κλειδιά των οντοτήτων που συμμετέχουν, και επιπλέον όλα τα χαρακτηριστικά του συνόλου συσχετίσεων. 
+  \item[Σύνθετα χαρακτηριστικά :] Τα σύνθετα χαρακτηριστικά μετατρέπονται σε ένα σύνολο απλών.
+  \item[Πλειότιμα χαρακτηριστικά :] Από τα πλειότιμα χαρακτηριστικά ενός συνόλου οντοτήτων προκύπτει νέος πίνακας. Ο πίνακας αυτός έχεις ως στήλες το πρωτεύον κλειδί του συνόλου οντοτήτων και μία ακόμα που αντιστοιχεί στο πλειότιμο χαρακτηριστικό.
+  \item[Εξειδίκευση :] Όταν έχουμε εξειδίκευση, τότε προκύπτει ένας πίνακας για κάθε εμπλεκόμενο σύνολο οντοτήτων, όπου καθένας από τους πίνακες εξειδίκευσης συμπεριλαμβάνει ως στήλη το πρωτεύον κλειδί του πίνακα γενίκευσης.
+ 
+\end{description}
+
+Ακολουθώντας τους παραπάνω κανόνες προκύπτει το σχήμα \ref{fig:RelationalModel:diagram}.
+
+\begin{landscape}
+\begin{figure}
+\begin{center}
+\resizebox*{23.5cm}{!}{
+\includegraphics{images/RelationalModel.png}}
+\caption{Σχεσιακό σχήμα}
+\label{fig:RelationalModel:diagram}
+\end{center}
+\end{figure}
+\end{landscape}
+
+
 \subsection{Δημιουργία ειδικού χρήστη}
 
 Σαν πρώτο βήμα είναι η δημιουργία ειδικού χρήστη για την βάση έτσι ώστε να μην χρησιμοποιούμε συνέχεια τον υπερχρήστη. Για την επίτευξη αυτού του σκοπού πληκτρολογούμε στο terminal τα παρακάτω: 
@@ -491,7 +599,8 @@ Enter password:
 
 Και αφού έχουμε μπει στην βάση δημιουργούμε ένα καινούργιο χρήστη και μία νέα βάση και δίνουμε στον χρήστη την δυνατότητα να την τροποποιεί. Όλα αυτά επιτυγχάνονται με τα παρακάτω:
 
-\begin{minted}[breaklines=true]{mysql}
+\captionof{listing}{Δημιουργία της βάσης δεδομένων}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
 MariaDB [(none)]> CREATE USER 'tme119'@'localhost' IDENTIFIED BY 'tme119_password' ;
 MariaDB [(none)]> GRANT USAGE ON *.* TO 'tme119'@'localhost' IDENTIFIED BY 'tme119_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
 MariaDB [(none)]> CREATE DATABASE `tme119` CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -520,20 +629,187 @@ MariaDB [(none)]> show databases;
 2 rows in set (0.00 sec)
 \end{minted}
 
-Οι υπόλοιπες αλλαγές θα γίνουν μέσω της php
+\subsection{Δημιουργία πινάκων}
 
 
+%\begin{landscape}
+%\begin{table}[htbp]
+%\begin{center}
+%  \begin{tabular}{|c|c|m{0.35\textwidth}|m{0.35\textwidth}|m{2.2cm}|c|m{1.5cm}|}
+%    \hline
+%    {\bf Πεδίο} & {\bf Τύπος μεταβλητής} & {\bf Εύρος τιμών} & {\bf Περιγραφή} & {\bf Πρωτεύον κλειδί} & {\bf Null} & {\bf Ξένο κλειδί} \\ \hline
+%    username & VARCHAR(50) & Όλα τα Αλφαριθμητικά ως 50 χαρακτήρες & Ο κωδικός τους χρήστη σε \en{MD5 Hash} & ΟΧΙ & ΟΧΙ & ΟΧΙ \\ \hline
+%    password & VARCHAR(50) & Όλα τα Αλφαριθμητικά ως 50 χαρακτήρες & Ο κωδικός τους χρήστη σε \en{MD5 Hash} & ΟΧΙ & ΟΧΙ & ΟΧΙ \\ \hline
+%    first\_name & VARCHAR(100) & Όλα τα Αλφαριθμητικά ως 100 χαρακτήρες & Το όνομα του χρήστη & ΟΧΙ & ΝΑΙ & ΟΧΙ \\ \hline
+%    last\_name & VARCHAR(100) & Όλα τα Αλφαριθμητικά ως 100 χαρακτήρες & Το επίθετο του χρήστη & ΟΧΙ & ΝΑΙ & ΟΧΙ \\ \hline
+%    join\_date & DATE & 1000-01-01 έως 9999-12-31 & Ημερομηνία εγγραφής του χρήστη & OXI & ΝΑΙ & ΟΧΙ \\ \hline
+%    gender & BOOL & 0 ή 1 & Το φύλο του χρήστη(Το 1 υποδηλώνει άνδρα και το 0 γυναίκα) & OXI & ΝΑΙ & ΟΧΙ \\ \hline
+%    email & VARCHAR(255) & Όλα τα Αλφαριθμητικά ως 255 χαρακτήρες & Το email του χρήστη & ΟΧΙ & ΝΑΙ & ΟΧΙ \\ \hline
+%  \end{tabular}
+%\caption{Ο πίνακας users.}
+%\label{table:db_table:users}
+%\end{center}
+%\end{table}
+%\end{landscape}
 
 
+\captionof{listing}{Δημιουργία του πίνακα users}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE users (uid INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(30) UNIQUE NOT NULL, password VARCHAR(50) NOT NULL, first_name VARCHAR(100), last_name VARCHAR(100), join_date DATE, gender BOOL, email VARCHAR(255));
+
+Query OK, 0 rows affected (0.06 sec)
+
+MariaDB [tme119]>describe users;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| uid        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| username   | varchar(30)  | NO   | UNI | NULL    |                |
+| password   | varchar(50)  | NO   |     | NULL    |                |
+| first_name | varchar(100) | YES  |     | NULL    |                |
+| last_name  | varchar(100) | YES  |     | NULL    |                |
+| join_date  | date         | YES  |     | NULL    |                |
+| gender     | tinyint(1)   | YES  |     | NULL    |                |
+| email      | varchar(255) | YES  |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+8 rows in set (0.79 sec)
+
+MariaDB [tme119]> INSERT INTO users(username,password,first_name,last_name,join_date,gender,email) VALUES('anagno',MD5('anagno'),'Vasilis','Anagnostopoulos','2015-02-15',1,'anagnwstopoulos@hotmail.com');
+Query OK, 1 row affected (0.02 sec);
+\end{minted}
+
+\captionof{listing}{Δημιουργία του πίνακα books}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE books (id int UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(100) NOT NULL, description TEXT NOT NULL, PRIMARY KEY (id) );
+
+Query OK, 0 rows affected (0.12 sec)
+
+MariaDB [tme119]> describe books;
++-------------+------------------+------+-----+---------+----------------+
+| Field       | Type             | Null | Key | Default | Extra          |
++-------------+------------------+------+-----+---------+----------------+
+| id          | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(100)     | NO   |     | NULL    |                |
+| description | text             | NO   |     | NULL    |                |
++-------------+------------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+\end{minted}
+
+\captionof{listing}{Δημιουργία του πίνακα categories}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE categories (book_id INT UNSIGNED NOT NULL, type VARCHAR(30), PRIMARY KEY (book_id,type), FOREIGN KEY (book_id) REFERENCES books(id) );
+Query OK, 0 rows affected (0.08 sec)
+
+MariaDB [tme119]> describe categories;
++---------+------------------+------+-----+---------+-------+
+| Field   | Type             | Null | Key | Default | Extra |
++---------+------------------+------+-----+---------+-------+
+| book_id | int(10) unsigned | NO   | PRI | NULL    |       |
+| type    | varchar(30)      | NO   | PRI |         |       |
++---------+------------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+\end{minted}
+
+\captionof{listing}{Δημιουργία του πίνακα authors}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE authors (id INT UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, PRIMARY KEY (id));
+Query OK, 0 rows affected (0.08 sec)
+
+MariaDB [tme119]> describe authors;
++-------+------------------+------+-----+---------+-------+
+| Field | Type             | Null | Key | Default | Extra |
++-------+------------------+------+-----+---------+-------+
+| id    | int(10) unsigned | NO   | PRI | NULL    |       |
+| name  | varchar(50)      | NO   |     | NULL    |       |
++-------+------------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+\end{minted}
 
 
+\captionof{listing}{Δημιουργία του πίνακα writes}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE writes (author_id INT UNSIGNED NOT NULL, book_id INT UNSIGNED NOT NULL, PRIMARY KEY (author_id, book_id), FOREIGN KEY (book_id) REFERENCES books(id), FOREIGN KEY (author_id) REFERENCES authors(id) );
+Query OK, 0 rows affected (0.06 sec)
 
+MariaDB [tme119]> describe writes;
++-----------+------------------+------+-----+---------+-------+
+| Field     | Type             | Null | Key | Default | Extra |
++-----------+------------------+------+-----+---------+-------+
+| author_id | int(10) unsigned | NO   | PRI | NULL    |       |
+| book_id   | int(10) unsigned | NO   | PRI | NULL    |       |
++-----------+------------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+\end{minted}
 
+\captionof{listing}{Δημιουργία του πίνακα publishers}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE publishers ( id INT UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(50) NOT NULL, PRIMARY KEY (id) );
+Query OK, 0 rows affected (0.03 sec)
 
+MariaDB [tme119]> describe publishers;
++-------+------------------+------+-----+---------+----------------+
+| Field | Type             | Null | Key | Default | Extra          |
++-------+------------------+------+-----+---------+----------------+
+| id    | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(50)      | NO   |     | NULL    |                |
++-------+------------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+\end{minted}
 
+\captionof{listing}{Δημιουργία του πίνακα editions}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE editions ( isbn VARCHAR(50) UNIQUE NOT NULL, book_id INT UNSIGNED NOT NULL, publisher_id INT UNSIGNED NOT NULL,  edition INT UNSIGNED, date DATE, language VARCHAR(2), PRIMARY KEY (isbn),FOREIGN KEY (book_id) REFERENCES books(id), FOREIGN KEY (publisher_id) REFERENCES publishers(id) );
+Query OK, 0 rows affected (0.09 sec)
 
+MariaDB [tme119]> describe editions;
++--------------+------------------+------+-----+---------+-------+
+| Field        | Type             | Null | Key | Default | Extra |
++--------------+------------------+------+-----+---------+-------+
+| isbn         | varchar(50)      | NO   | PRI | NULL    |       |
+| book_id      | int(10) unsigned | NO   | MUL | NULL    |       |
+| publisher_id | int(10) unsigned | NO   | MUL | NULL    |       |
+| edition      | int(10) unsigned | YES  |     | NULL    |       |
+| date         | date             | YES  |     | NULL    |       |
+| language     | varchar(2)       | YES  |     | NULL    |       |
++--------------+------------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+\end{minted}
 
+\captionof{listing}{Δημιουργία του πίνακα paperbooks}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE paperbooks (id INT UNSIGNED NOT NULL AUTO_INCREMENT,isbn VARCHAR(50) NOT NULL, binding VARCHAR(30), location VARCHAR(100), PRIMARY KEY (id), FOREIGN KEY (isbn) REFERENCES editions(isbn));
+Query OK, 0 rows affected (0.04 sec)
 
+MariaDB [tme119]> describe paperbooks;
++----------+------------------+------+-----+---------+----------------+
+| Field    | Type             | Null | Key | Default | Extra          |
++----------+------------------+------+-----+---------+----------------+
+| id       | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| isbn     | varchar(50)      | NO   | MUL | NULL    |                |
+| binding  | varchar(30)      | YES  |     | NULL    |                |
+| location | varchar(100)     | YES  |     | NULL    |                |
++----------+------------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+\end{minted}
+
+\captionof{listing}{Δημιουργία του πίνακα borrows}
+\begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
+MariaDB [book]> CREATE TABLE borrows (paperbook_id INT UNSIGNED NOT NULL,username VARCHAR(50) NOT NULL, start_period DATE NOT NULL, end_period DATE, PRIMARY KEY (paperbook_id, username, start_period), FOREIGN KEY (paperbook_id) REFERENCES paperbooks(id), FOREIGN KEY (username) REFERENCES users(username));
+Query OK, 0 rows affected (0.04 sec)
+
+MariaDB [tme119]> describe borrows;
++--------------+------------------+------+-----+---------+-------+
+| Field        | Type             | Null | Key | Default | Extra |
++--------------+------------------+------+-----+---------+-------+
+| paperbook_id | int(10) unsigned | NO   | PRI | NULL    |       |
+| username     | varchar(50)      | NO   | PRI | NULL    |       |
+| start_period | date             | NO   | PRI | NULL    |       |
+| end_period   | date             | YES  |     | NULL    |       |
++--------------+------------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+\end{minted}
 
 
 
