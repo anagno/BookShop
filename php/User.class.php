@@ -136,6 +136,22 @@ class User extends DataObject
 		}
 	}
 	
+	public function getGenderString()
+	{
+		// Γαμώ τις αρχιδιές της php που αντί να μου το τραβά σαν bool
+		// θεωρεί ότι το ένα είναι string. Όποιος φτιάχνει untyped γλώσσες
+		// πρέπει να πεθάνει !!!
+		
+		if ($this->data['gender'] ==="1")
+		{
+			return "Ανδρας";
+		}
+		else
+		{
+			return "Γυναίκα";
+		}
+	}
+	
 	/**
 	 * Για να μην αποθηκεύονται απ` ευθείας οι κωδικοί
 	 * Κανονίκα πρέπει να γίνει και salting εκός από hashing σε θεωρητικό επιπέδο
