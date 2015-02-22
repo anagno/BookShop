@@ -3,7 +3,7 @@
 require_once "DataObject.class.php";
 
 /**
- * Defining the name of the table that is used to store the users
+ * Defining the name of the table that is used to store the authors
  */
 define('TABLE_AUTHOR', 'authors');
 
