@@ -19,9 +19,6 @@ if(!$book = Book::get($book_id))
 <dt> Book id </dt> <dd> <?php echo $book-> getValueEncoded( "id" ) ?> </dd>
 <dt> Title </dt> <dd> <?php echo $book-> getValueEncoded( "title" ) ?> </dd>
 <dt> Description </dt> <dd> <?php echo $book-> getValueEncoded( "description" ) ?> </dd>
+<dt> Categories </dt> <dd> <?php echo $book->getCategoriesString() ?> </dd>
 
 </dl>
-
-
-
-
