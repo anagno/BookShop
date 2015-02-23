@@ -1,6 +1,7 @@
 <?php
 
 require_once "DataObject.class.php";
+require_once "Author.class.php";
 
 /**
  * Defining the name of the table that is used to store the books
@@ -25,7 +26,6 @@ class Book extends DataObject
 		// http://stackoverflow.com/questions/184618/what-is-the-best-comment-in-source-code-you-have-ever-encountered
 		$conn = parent::connect();
 		$sql = 'SELECT * FROM ' . TABLE_BOOK . ' WHERE id = :id';
-		$sub_sql = 'SELECT type FROM ' . TABLE_CATEGORIES . ' WHERE book_id = :id';
 		try 
 		{
 			$st = $conn-> prepare( $sql );
@@ -38,6 +38,7 @@ class Book extends DataObject
 			{
 				try 
 				{
+					$sub_sql = 'SELECT type FROM ' . TABLE_CATEGORIES . ' WHERE book_id = :id';
 					$conn = parent::connect();
 					$st = $conn-> prepare( $sub_sql );
 					$st-> bindValue( ":id", $id, PDO::PARAM_INT );
@@ -51,8 +52,10 @@ class Book extends DataObject
 				catch ( PDOException $e )
 				{
 					
-					die( "Sub-query failed: " . $e->getMessage() );
+					die( "Sub-query failed for categories: " . $e->getMessage() );
 				}
+				
+				$book['authors'] = Author::getByBook($id);
 				
 				return new Book( $book );
 			}
@@ -107,16 +110,27 @@ class Book extends DataObject
 	public function getCategoriesString()
 	{
 		// http://php.net/function.implode
-		$categories = implode(", ",$this->data['categories']);
-			
-		return $categories;
+		return implode(", ",$this->data['categories']);
+	}
+	
+	public function getAuthorsString()
+	{
+		$authors_string = array();
+		
+		foreach($this->data['authors'] as $author)
+		{
+			$authors_string[] = $author-> getValue("name");
+		}
+		
+		 return implode(", ", $authors_string);
 	}
 		
 	protected $data = array(
 			"id" => "",
 			"title" => "",
 			"description" => "",
-			"categories" => array()
+			"categories" => array(),
+			"authors" => array()
 	);
 	
 }

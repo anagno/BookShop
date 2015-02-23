@@ -7,6 +7,12 @@ require_once "DataObject.class.php";
  */
 define('TABLE_AUTHOR', 'authors');
 
+/**
+ * Defining the name of the table that is used to store the connection
+ * between the authors and the books
+ */
+define('TABLE_WRITES', 'writes');
+
 class Author extends DataObject 
 {
 	public static function get($id) 
@@ -20,11 +26,43 @@ class Author extends DataObject
 			$st-> execute();
 			$row = $st-> fetch();
 			parent::disconnect( $conn );
-			
+
 			if ( $row ) 
 				return new Author( $row );
 		} 
 		catch ( PDOException $e ) 
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
+	}
+	
+	public static function getByBook($book_id)
+	{
+		$conn = parent::connect();
+		$sql = 'SELECT author_id FROM ' . TABLE_WRITES . ' WHERE book_id = :book_id';
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> bindValue( ":book_id", $book_id, PDO::PARAM_INT );
+			$st-> execute();
+			$rows = $st-> fetchAll(PDO::FETCH_COLUMN);
+			parent::disconnect( $conn );
+				
+			if ( $rows )
+			{
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				$authors = array();
+				
+				foreach ($rows as $row)
+				{
+					array_push($authors, self::get($row) );
+				}		
+				
+				return $authors;
+			}	
+		}
+		catch ( PDOException $e )
 		{
 			parent::disconnect( $conn );
 			die( "Query failed: " . $e->getMessage() );

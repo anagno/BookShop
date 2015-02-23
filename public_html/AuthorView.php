@@ -20,7 +20,3 @@ if(!$author = Author::get($author_id))
 <dt> Name </dt> <dd> <?php echo $author-> getValueEncoded( "name" ) ?> </dd>
 
 </dl>
-
-
-
-
