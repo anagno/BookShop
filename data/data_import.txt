@@ -1,0 +1,11 @@
+LOAD DATA LOCAL INFILE '/home/administ/authors.csv' INTO TABLE authors FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+LOAD DATA LOCAL INFILE '/home/administ/books.csv' INTO TABLE books FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+LOAD DATA LOCAL INFILE '/home/administ/categories.csv' INTO TABLE categories FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+LOAD DATA LOCAL INFILE '/home/administ/writes.csv' INTO TABLE writes FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+LOAD DATA LOCAL INFILE '/home/administ/publishers.csv' INTO TABLE publishers FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+LOAD DATA LOCAL INFILE '/home/administ/editions.csv' INTO TABLE editions FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' (isbn,book_id,publisher_id,edition,@date,language) SET date = STR_TO_DATE(@date, '%m/%d/%Y');
