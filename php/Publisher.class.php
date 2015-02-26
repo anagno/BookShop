@@ -2,11 +2,6 @@
 
 require_once "DataObject.class.php";
 
-/**
- * Defining the name of the table that is used to store the publishers
- */
-define('TABLE_PUBLISHER', 'publishers');
-
 class Publisher extends DataObject 
 {
 	public static function get($id) 

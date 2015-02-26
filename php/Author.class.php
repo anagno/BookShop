@@ -2,17 +2,6 @@
 
 require_once "DataObject.class.php";
 
-/**
- * Defining the name of the table that is used to store the authors
- */
-define('TABLE_AUTHOR', 'authors');
-
-/**
- * Defining the name of the table that is used to store the connection
- * between the authors and the books
- */
-define('TABLE_WRITES', 'writes');
-
 class Author extends DataObject 
 {
 	public static function get($id) 

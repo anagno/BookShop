@@ -2,11 +2,6 @@
 
 require_once "DataObject.class.php";
 
-/**
- * Defining the name of the table that is used to store the users
- */
-define('TABLE_USER', 'users');
-
 class User extends DataObject 
 {
 	public static function authenticate($username, $password)

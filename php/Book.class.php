@@ -3,12 +3,6 @@
 require_once "DataObject.class.php";
 require_once "Author.class.php";
 
-/**
- * Defining the name of the table that is used to store the books
- */
-define('TABLE_BOOK', 'books');
-define('TABLE_CATEGORIES', 'categories');
-
 class Book extends DataObject 
 {
 	public static function get($id) 
