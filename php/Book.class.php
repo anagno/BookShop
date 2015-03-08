@@ -82,6 +82,43 @@ class Book extends DataObject
 		}
 	}
 	
+	public static function getByAuthor(Author $author)
+	{
+		$conn = parent::connect();
+		$sql = 'SELECT * FROM ' . TABLE_WRITES . ' WHERE author_id = :id';
+		try 
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> bindValue( ":id", $author->getValue("id"), PDO::PARAM_INT );
+			$st-> execute();
+			$rows = $st ->fetchAll();
+			parent::disconnect( $conn );
+
+			if($rows)
+			{
+				$books = array();
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				// TODO: Συγκεκριμένα γίνεται σπατάλη μνήμης διότι δεν 
+				//       χρησιμοποιούμε το γεγονός ότι ο συγγράφεας είναι παντού 
+				//       ίδιος και αντί αυτού δεσμεύουμε μνήμη για την δημιουργία
+				//       καινούργιου αντικειμένου συγγραφέα
+				//       για κάθε βιβλίου που έχει γράψει 
+				foreach ($rows as $row)
+				{											
+					array_push($books, self::get($row['book_id']));
+				}
+				
+				return $books;
+				
+			}
+		}
+		catch (PDOException $e)
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );			
+		}	
+	}
+	
 	public static function delete($id)
 	{
 		$conn = parent::connect();
