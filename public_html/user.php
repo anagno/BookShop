@@ -1,13 +1,14 @@
 <?php
 
+require_once "common.inc.php";
 require_once "../php/User.class.php";
 
-if ( isset( $_GET["user_id"] ) )
-	$user_id = (int) $_GET["user_id"];
-
-if(!$user = User::get($user_id))
+if(checkLogin())
 {
-	die("Error: User not found");
+	$user = $_SESSION['current_user'];
+
+	displayPageHeader("Χρήστης: " . $user->getValueEncoded( "first_name" ) . " " . 
+                                $user->getValueEncoded( "last_name" ) );
 }
 ?>
 
@@ -15,7 +16,6 @@ if(!$user = User::get($user_id))
 
 <dl>
 
-<dt> User id </dt> <dd> <?php echo $user-> getValueEncoded( "uid" ) ?> </dd>
 <dt> Username </dt> <dd> <?php echo $user-> getValueEncoded( "username" ) ?> </dd>
 <dt> First name </dt> <dd> <?php echo $user-> getValueEncoded( "first_name" ) ?> </dd>
 <dt> Last name </dt> <dd> <?php echo $user-> getValueEncoded( "last_name" ) ?> </dd>
@@ -24,6 +24,10 @@ if(!$user = User::get($user_id))
 <dt> Email address </dt> <dd> <?php echo $user-> getValueEncoded( "email" ) ?> </dd>
 
 </dl>
+
+<?php 
+displayPageFooter()
+?>
 
 
 
