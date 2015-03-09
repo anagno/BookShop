@@ -170,6 +170,11 @@ class Edition extends DataObject
 	{
 		return $this->data['book']->getValue("title");
 	}
+	
+	public function getBookDescriptionString()
+	{
+		return $this->data['book']->getValue("description");
+	}
 		
 	protected $data = array(
 			"book" => "",
