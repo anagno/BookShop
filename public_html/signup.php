@@ -64,7 +64,7 @@ else
     Κωδικός <input type='text' maxlength='16' name='pass' value="<?= $pass ?>"><br>
     Όνομα   <input type='text' maxlength='16' name='first' value="<?= $first ?>"><br>
     Επίθετο <input type='text' maxlength='16' name='last' value="<?= $last ?>"><br>
-    Φύλο   <input type='radio' name='gender' value="1">:Άνδρας 
+    Φύλο   <input type='radio' name='gender' value="1" checked >:Άνδρας 
            <input type='radio' name='gender' value="0">:Γυναίκα <br>
     Email   <input type='text' maxlength='16' name='mail' value="<?= $mail ?>"><br>
     <input type='submit' value='Δημιουργία'>
