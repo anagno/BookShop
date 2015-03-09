@@ -8,48 +8,48 @@ $author = "";
 
 if ( isset( $_GET["author_id"] ) )
 	$author_id = (int) $_GET["author_id"];
+else 
+	$author_id = (int) -1;
+	// Επειδή η βάση δεδομένων δέχεται μόνο θετικούς ακέραιους αριθμούς
 
 if($author = Author::get($author_id))
 {
 	displayPageHeader( $author->getValueEncoded( "name" ) );
+	?>
+	
+	<!-- http://www.w3schools.com/tags/tag_dl.asp -->
+	
+	<dl>
+	
+	<dt> Αύξων Αριθμός </dt> <dd> <?php echo $author-> getValueEncoded( "id" ) ?> </dd>
+	<dt> Όνομα </dt> <dd> <?php echo $author-> getValueEncoded( "name" ) ?> </dd>
+	
+	</dl>
+	
+	<?php 
+	
+	$books_author= Book::getByAuthor($author);
+	if($books_author)
+	{
+		echo "<h2> Βιβλία που έχει γράψει ο συγγραφέας </h2>";
+
+		echo "<table>";
+		echo "<tr><td> Κωδικός </td><td> Τίτλος </td> </tr>";	
+		foreach ($books_author as $book)
+		{
+			echo "<tr><td>";
+			echo $book->getValueEncoded("id") ;
+			echo "</td><td>";
+			echo $book->getValueEncoded("title");
+			echo "</td> </tr>";	
+		}
+	
+		echo "</table>";
+	} 
 }
 else 
 {
 	displayPageHeader("Ο συγγραφέας δεν βρέθηκε");
-}
-
-?>
-
-<!-- http://www.w3schools.com/tags/tag_dl.asp -->
-
-<dl>
-
-<dt> Αύξων Αριθμός </dt> <dd> <?php echo $author-> getValueEncoded( "id" ) ?> </dd>
-<dt> Όνομα </dt> <dd> <?php echo $author-> getValueEncoded( "name" ) ?> </dd>
-
-</dl>
-
-
-<?php 
-
-$books_author= Book::getByAuthor($author);
-
-echo "<h2> Βιβλία που έχει γράψει ο συγγραφέας </h2>";
-
-if($books_author)
-{
-	echo "<table>";
-	echo "<tr><td> Κωδικός </td><td> Τίτλος </td> </tr>";	
-	foreach ($books_author as $book)
-	{
-		echo "<tr><td>";
-		echo $book->getValueEncoded("id") ;
-		echo "</td><td>";
-		echo $book->getValueEncoded("title");
-		echo "</td> </tr>";	
-	}
-	
-	echo "</table>";
 }
 ?>
 
