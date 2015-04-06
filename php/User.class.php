@@ -88,8 +88,8 @@ class User extends DataObject
 		$password = self::passwordHash($password);
 		
 		$conn = parent::connect();
-		$sql = 'INSERT INTO ' . TABLE_USER . ' (username,password,first_name,last_name,
-			                  join_date,gender,email) VALUES(:username,:password,
+		$sql = 'INSERT INTO ' . TABLE_USER . ' (username,password,is_admin,first_name,last_name,
+			                  join_date,gender,email) VALUES(:username,:password, 0
 				              :first_name,:last_name,NOW(),:gender,:email)';
 		try
 		{
@@ -112,6 +112,60 @@ class User extends DataObject
 		}
 	}
 	
+	public static function updatePrivileges($username)
+	{
+		//Check if the username exists.
+		if(self::check($username))
+		{		
+			$conn = parent::connect();
+			$sql = 'INSERT INTO '. TABLE_USER . ' SET is_admin = 1 
+									WHERE username = :username';
+			try
+			{
+				$st = $conn-> prepare( $sql );
+				$st-> bindValue( ":username", $username, PDO::PARAM_STR );
+				$st-> execute();
+				parent::disconnect( $conn );
+			
+				return TRUE;
+			}
+			catch ( PDOException $e )
+			{
+				parent::disconnect( $conn );
+				die( "Query failed: " . $e->getMessage() );
+			}
+		}
+		else 
+			return FALSE;
+	}
+	
+	public static function removePrivileges($username)
+	{
+		//Check if the username exists.
+		if(self::check($username))
+		{
+			$conn = parent::connect();
+			$sql = 'INSERT INTO '. TABLE_USER . ' SET is_admin = 0
+									WHERE username = :username';
+			try
+			{
+				$st = $conn-> prepare( $sql );
+				$st-> bindValue( ":username", $username, PDO::PARAM_STR );
+				$st-> execute();
+				parent::disconnect( $conn );
+					
+				return TRUE;
+			}
+			catch ( PDOException $e )
+			{
+				parent::disconnect( $conn );
+				die( "Query failed: " . $e->getMessage() );
+			}
+		}
+		else
+			return FALSE;
+	}
+	
 	public static function delete($uid)
 	{
 		$conn = parent::connect();
@@ -128,6 +182,18 @@ class User extends DataObject
 		{
 			parent::disconnect( $conn );
 			die( "Query failed: " . $e->getMessage() );
+		}
+	}
+	
+	public function isAdmin()
+	{
+		if ($this->data['is_admin'] ==="1")
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
 		}
 	}
 	
@@ -162,6 +228,7 @@ class User extends DataObject
 			"uid" => "",
 			"username" => "",
 			"password" => "",
+			"is_admin" => "",
 			"first_name" => "",
 			"last_name" => "",
 			"join_date" => "",

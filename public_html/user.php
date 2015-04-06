@@ -6,9 +6,17 @@ require_once "../php/User.class.php";
 if(checkLogin())
 {
 	$user = $_SESSION['current_user'];
-
-	displayPageHeader("Χρήστης: " . $user->getValueEncoded( "first_name" ) . " " . 
-                                $user->getValueEncoded( "last_name" ) );
+	
+	if($user->isAdmin())
+	{
+		displayPageHeader("Διαχειριστής: " . $user->getValueEncoded( "first_name" ) . " " .
+				$user->getValueEncoded( "last_name" ) );
+	}
+	else 
+	{
+		displayPageHeader("Χρήστης: " . $user->getValueEncoded( "first_name" ) . " " .
+				$user->getValueEncoded( "last_name" ) );		
+	}
 }
 ?>
 
