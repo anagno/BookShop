@@ -655,26 +655,27 @@ MariaDB [(none)]> show databases;
 
 \captionof{listing}{Δημιουργία του πίνακα users}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE users (uid INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(30) UNIQUE NOT NULL, password VARCHAR(50) NOT NULL, first_name VARCHAR(100), last_name VARCHAR(100), join_date DATE, gender BOOL, email VARCHAR(255));
+MariaDB [book]> CREATE TABLE users (uid INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(30) UNIQUE NOT NULL, password VARCHAR(50) NOT NULL, is_admin BOOL NOT NULL, first_name VARCHAR(100), last_name VARCHAR(100), join_date DATE, gender BOOL, email VARCHAR(255));
 
 Query OK, 0 rows affected (0.06 sec)
 
-MariaDB [tme119]>describe users;
+MariaDB [tme119]> describe users;
 +------------+--------------+------+-----+---------+----------------+
 | Field      | Type         | Null | Key | Default | Extra          |
 +------------+--------------+------+-----+---------+----------------+
 | uid        | int(11)      | NO   | PRI | NULL    | auto_increment |
 | username   | varchar(30)  | NO   | UNI | NULL    |                |
 | password   | varchar(50)  | NO   |     | NULL    |                |
+| is_admin   | tinyint(1)   | NO   |     | NULL    |                |
 | first_name | varchar(100) | YES  |     | NULL    |                |
 | last_name  | varchar(100) | YES  |     | NULL    |                |
 | join_date  | date         | YES  |     | NULL    |                |
 | gender     | tinyint(1)   | YES  |     | NULL    |                |
 | email      | varchar(255) | YES  |     | NULL    |                |
 +------------+--------------+------+-----+---------+----------------+
-8 rows in set (0.79 sec)
+9 rows in set (0.00 sec)
 
-MariaDB [tme119]> INSERT INTO users(username,password,first_name,last_name,join_date,gender,email) VALUES('anagno',MD5('anagno'),'Vasilis','Anagnostopoulos','2015-02-15',1,'anagnwstopoulos@hotmail.com');
+MariaDB [tme119]> INSERT INTO users(username,password,is_admin,first_name,last_name,join_date,gender,email) VALUES('anagno',MD5('anagno'),1,'Vasilis','Anagnostopoulos','2015-02-15',1,'anagnwstopoulos@hotmail.com');
 Query OK, 1 row affected (0.02 sec);
 \end{minted}
 
