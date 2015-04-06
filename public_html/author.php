@@ -6,8 +6,8 @@ require_once "../php/Book.class.php";
 
 $author = "";
 
-if ( isset( $_GET["author_id"] ) )
-	$author_id = (int) $_GET["author_id"];
+if ( isset( $_GET["id"] ) )
+	$author_id = (int) $_GET["id"];
 else 
 	$author_id = (int) -1;
 	// Επειδή η βάση δεδομένων δέχεται μόνο θετικούς ακέραιους αριθμούς
@@ -40,7 +40,11 @@ if($author = Author::get($author_id))
 			echo "<tr><td>";
 			echo $book->getValueEncoded("id") ;
 			echo "</td><td>";
+			echo "<a href='book.php?id="; 
+			echo $book->getValueEncoded("id") ;
+		 	echo "'>";
 			echo $book->getValueEncoded("title");
+			echo "</a>";
 			echo "</td> </tr>";	
 		}
 	

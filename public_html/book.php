@@ -6,8 +6,8 @@ require_once "../php/Edition.class.php";
 
 $book = "";
 
-if ( isset( $_GET["book_id"] ) )
-	$book_id = (int) $_GET["book_id"];
+if ( isset( $_GET["id"] ) )
+	$book_id = (int) $_GET["id"];
 else 
 	$book_id = (int) -1;
 	// Επειδή η βάση δεδομένων δέχεται μόνο θετικούς ακέρους 
