@@ -88,9 +88,9 @@ class User extends DataObject
 		$password = self::passwordHash($password);
 		
 		$conn = parent::connect();
-		$sql = 'INSERT INTO ' . TABLE_USER . ' (username,password,is_admin,first_name,last_name,
-			                  join_date,gender,email) VALUES(:username,:password, 0
-				              :first_name,:last_name,NOW(),:gender,:email)';
+		$sql = 'INSERT INTO ' . TABLE_USER . ' (username,password,is_admin,first_name,
+				          last_name,join_date,gender,email) VALUES(:username,
+				          :password, 0,:first_name,:last_name,NOW(),:gender,:email)';
 		try
 		{
 			$st = $conn-> prepare( $sql );
@@ -118,7 +118,7 @@ class User extends DataObject
 		if(self::check($username))
 		{		
 			$conn = parent::connect();
-			$sql = 'INSERT INTO '. TABLE_USER . ' SET is_admin = 1 
+			$sql = 'UPDATE '. TABLE_USER . ' SET is_admin = 1 
 									WHERE username = :username';
 			try
 			{
@@ -145,7 +145,7 @@ class User extends DataObject
 		if(self::check($username))
 		{
 			$conn = parent::connect();
-			$sql = 'INSERT INTO '. TABLE_USER . ' SET is_admin = 0
+			$sql = 'UPDATE '. TABLE_USER . ' SET is_admin = 0
 									WHERE username = :username';
 			try
 			{
