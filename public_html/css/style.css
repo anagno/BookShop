@@ -2,7 +2,7 @@
 /*
 	Reseting to default everything
 */
-@import url("reset.css");
+/*@import url("reset.css");*/
 
 body 
 { 
@@ -41,6 +41,10 @@ dd
 	overflow: auto; 
 }
 
+ul
+{
+	list-style: disc;
+}
 
 /* Headings */
 h1 

@@ -161,6 +161,11 @@ class Edition extends DataObject
 		}
 	}
 	
+	public function checkAvailability()
+	{
+		//TODO
+	}
+	
 	public function getPublishersString()
 	{	
 		return $this->data['publisher']->getValue("name");
