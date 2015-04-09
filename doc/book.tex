@@ -681,7 +681,7 @@ Query OK, 1 row affected (0.02 sec);
 
 \captionof{listing}{Δημιουργία του πίνακα books}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE books (id int UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(100) NOT NULL, description TEXT NOT NULL, PRIMARY KEY (id) );
+MariaDB [book]> CREATE TABLE books (id int UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(100) NOT NULL, description TEXT NOT NULL, PRIMARY KEY (id));
 
 Query OK, 0 rows affected (0.12 sec)
 
@@ -698,7 +698,7 @@ MariaDB [tme119]> describe books;
 
 \captionof{listing}{Δημιουργία του πίνακα categories}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE categories (book_id INT UNSIGNED NOT NULL, type VARCHAR(30), PRIMARY KEY (book_id,type), FOREIGN KEY (book_id) REFERENCES books(id) );
+MariaDB [book]> CREATE TABLE categories (book_id INT UNSIGNED NOT NULL, type VARCHAR(30), PRIMARY KEY (book_id,type), FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE ON UPDATE CASCADE);
 Query OK, 0 rows affected (0.08 sec)
 
 MariaDB [tme119]> describe categories;
@@ -730,7 +730,7 @@ MariaDB [tme119]> describe authors;
 
 \captionof{listing}{Δημιουργία του πίνακα writes}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE writes (author_id INT UNSIGNED NOT NULL, book_id INT UNSIGNED NOT NULL, PRIMARY KEY (author_id, book_id), FOREIGN KEY (book_id) REFERENCES books(id), FOREIGN KEY (author_id) REFERENCES authors(id) );
+MariaDB [book]> CREATE TABLE writes (author_id INT UNSIGNED NOT NULL, book_id INT UNSIGNED NOT NULL, PRIMARY KEY (author_id, book_id), FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE ON UPDATE CASCADE);
 Query OK, 0 rows affected (0.06 sec)
 
 MariaDB [tme119]> describe writes;
@@ -745,7 +745,7 @@ MariaDB [tme119]> describe writes;
 
 \captionof{listing}{Δημιουργία του πίνακα publishers}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE publishers ( id INT UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(50) NOT NULL, PRIMARY KEY (id) );
+MariaDB [book]> CREATE TABLE publishers ( id INT UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(50) NOT NULL, PRIMARY KEY (id));
 Query OK, 0 rows affected (0.03 sec)
 
 MariaDB [tme119]> describe publishers;
@@ -760,7 +760,7 @@ MariaDB [tme119]> describe publishers;
 
 \captionof{listing}{Δημιουργία του πίνακα editions}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE editions ( isbn VARCHAR(50) UNIQUE NOT NULL, book_id INT UNSIGNED NOT NULL, publisher_id INT UNSIGNED NOT NULL,  edition INT UNSIGNED, date DATE, language VARCHAR(2), PRIMARY KEY (isbn),FOREIGN KEY (book_id) REFERENCES books(id), FOREIGN KEY (publisher_id) REFERENCES publishers(id) );
+MariaDB [book]> CREATE TABLE editions ( isbn VARCHAR(50) UNIQUE NOT NULL, book_id INT UNSIGNED NOT NULL, publisher_id INT UNSIGNED NOT NULL,  edition INT UNSIGNED, date DATE, language VARCHAR(2), PRIMARY KEY (isbn),FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (publisher_id) REFERENCES publishers(id) ON DELETE CASCADE ON UPDATE CASCADE);
 Query OK, 0 rows affected (0.09 sec)
 
 MariaDB [tme119]> describe editions;
@@ -779,7 +779,7 @@ MariaDB [tme119]> describe editions;
 
 \captionof{listing}{Δημιουργία του πίνακα paperbooks}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE paperbooks (id INT UNSIGNED NOT NULL AUTO_INCREMENT,isbn VARCHAR(50) NOT NULL, binding VARCHAR(30), location VARCHAR(100), PRIMARY KEY (id), FOREIGN KEY (isbn) REFERENCES editions(isbn));
+MariaDB [book]> CREATE TABLE paperbooks (id INT UNSIGNED NOT NULL AUTO_INCREMENT,isbn VARCHAR(50) NOT NULL, binding VARCHAR(30), location VARCHAR(100), PRIMARY KEY (id), FOREIGN KEY (isbn) REFERENCES editions(isbn) ON DELETE CASCADE ON UPDATE CASCADE);
 Query OK, 0 rows affected (0.04 sec)
 
 MariaDB [tme119]> describe paperbooks;
@@ -796,7 +796,7 @@ MariaDB [tme119]> describe paperbooks;
 
 \captionof{listing}{Δημιουργία του πίνακα borrows}
 \begin{minted}[breaklines=true, frame=lines, framesep=2mm, baselinestretch=1.2, fontsize=\footnotesize, linenos]{mysql}
-MariaDB [book]> CREATE TABLE borrows (paperbook_id INT UNSIGNED NOT NULL,username VARCHAR(50) NOT NULL, start_period DATE NOT NULL, end_period DATE, PRIMARY KEY (paperbook_id, username, start_period), FOREIGN KEY (paperbook_id) REFERENCES paperbooks(id), FOREIGN KEY (username) REFERENCES users(username));
+MariaDB [book]> CREATE TABLE borrows (paperbook_id INT UNSIGNED NOT NULL,username VARCHAR(50) NOT NULL, start_period DATE NOT NULL, end_period DATE, PRIMARY KEY (paperbook_id, username, start_period), FOREIGN KEY (paperbook_id) REFERENCES paperbooks(id) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE ON UPDATE CASCADE);
 Query OK, 0 rows affected (0.04 sec)
 
 MariaDB [tme119]> describe borrows;
