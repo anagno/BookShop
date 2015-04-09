@@ -62,44 +62,6 @@ class Book extends DataObject
 		}
 	}
 	
-	public static function add($title,$description, & $authors, $categories)
-	{	
-		//TODO: Με κάποιο τρόπο πρέπει να μπαίνει και η σχέση με τους συγγραφείς
-		
-		$conn = parent::connect();
-		
-		try
-		{
-			// Εισάγωγουμε το βιβλίο στην βάση
-			$sql = 'INSERT INTO ' . TABLE_BOOK . ' (title,description)
-				           VALUES(:title,:description)';
-			$st = $conn-> prepare( $sql );
-			$st-> bindValue( ":title", $title, PDO::PARAM_STR );
-			$st-> bindValue( ":description", $description, PDO::PARAM_STR );
-			$st-> execute();
-			
-			// http://php.net/manual/en/pdo.lastinsertid.php
-			$new_book_id = $conn->lastInsertId();
-			// Συνδέουμε τους συγγραφείς που δίνονται με το καινούργιο βιβλίο
-			$sql = 'INSERT INTO ' . TABLE_WRITES . ' (author_id,book_id)
-				           VALUES(:author_id,:book_id)';			
-			foreach ($authors as $author)
-			{
-				$st = $conn-> prepare( $sql );
-				$st-> bindValue( ":author_id", $author->getValue("id"), PDO::PARAM_INT );
-				$st-> bindValue( ":book_id", $new_book_id, PDO::PARAM_STR );
-				$st-> execute();
-			}			
-			
-			parent::disconnect( $conn );
-		}
-		catch ( PDOException $e )
-		{
-			parent::disconnect( $conn );
-			die( "Query failed: " . $e->getMessage() );
-		}
-	}
-	
 	public static function getByAuthor(Author $author)
 	{
 		$conn = parent::connect();
@@ -135,6 +97,64 @@ class Book extends DataObject
 			parent::disconnect( $conn );
 			die( "Query failed: " . $e->getMessage() );			
 		}	
+	}
+	
+	public static function add($title,$description, $categories, $authors_id )
+	{
+		//TODO: την γραμματέας μας...
+	
+		$conn = parent::connect();
+	
+		try
+		{
+			// Εισάγωγουμε το βιβλίο στην βάση
+			$sql = 'INSERT INTO ' . TABLE_BOOK . ' (title,description)
+				           VALUES(:title,:description)';
+			$st = $conn-> prepare( $sql );
+			$st-> bindValue( ":title", $title, PDO::PARAM_STR );
+			$st-> bindValue( ":description", $description, PDO::PARAM_STR );
+			$st-> execute();
+				
+			// http://php.net/manual/en/pdo.lastinsertid.php
+			$new_book_id = $conn->lastInsertId();
+			// Συνδέουμε τους συγγραφείς που δίνονται με το καινούργιο βιβλίο
+			
+			// Πρέπει να γίνει με ένα sql insert για θέμα απόδοσης
+			// αλλά άστο για άλλη φορά.
+			// Ακόμα δεν ελέγχω ότι η μεταβλητή που παρέχεται είναι πίνακας.
+			foreach ($categories as $category)
+			{
+				$sql = 'INSERT INTO '. TABLE_CATEGORIES . '(book_id,type)
+					VALUES(:id,:category)';
+				$st = $conn-> prepare( $sql );
+				$st-> bindValue( ":id", $new_book_id, PDO::PARAM_INT );
+				$st-> bindValue( ":category", $category, PDO::PARAM_STR );
+				$st-> execute();
+			}
+				
+			// Ομοίως και εδώ !!! Πεθαίνει ένα κομμάτι μου μέσα που τα γράφω αυτά
+			// και ξέρω ότι δεν θα τα αντικαταστήσω. Μέχρι το τέλος της εργασίας
+			// αυτής προβλέπεται να είμαι πιο νεκρός και από την νεκρά θάλασσα.
+			
+			foreach ($authors_id as $author_id)
+			{
+				$sql = 'INSERT INTO '. TABLE_WRITES . '(author_id,book_id)
+					VALUES(:author_id,:book_id)';
+				$st = $conn-> prepare( $sql );
+				$st-> bindValue( ":book_id", $new_book_id, PDO::PARAM_INT );
+				$st-> bindValue( ":author_id", $author_id, PDO::PARAM_INT );
+				$st-> execute();
+			}			
+				
+			parent::disconnect( $conn );
+			
+			return $new_book_id;
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
 	}
 	
 	public function update($title,$description, $categories, $authors_id )
@@ -206,8 +226,8 @@ class Book extends DataObject
 	
 	public function delete()
 	{
-		//TODO Να κάνουμε ελέγχους για τον αν υπάρχουν βιβλία ήδη 
-		// στην βιβλιοθήκη και επομένως δεν είναι δυνατή η διαγραφή.		
+		// Η συνάρτηση λειτουργεί επειδή είναι ενεργοποιημένα τα CASCADE στην 
+		// βάση δεδομένων αλλιώς δεν θα λειτουργεί.	
 		
 		$conn = parent::connect();
 		$sql = 'DELETE FROM ' . TABLE_BOOK . ' WHERE id = :id';
