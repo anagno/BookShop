@@ -2,6 +2,7 @@
 
 require_once "common.inc.php";
 require_once "../php/Book.class.php";
+require_once "../php/Author.class.php";
 require_once "../php/Edition.class.php";
 
 $book = "";
@@ -99,21 +100,24 @@ else if (isset( $_POST["delete_id"]) && checkAdminLogin())
 }
 elseif ( isset($_POST["update_id"]) && checkAdminLogin() &&
 		 isset($_POST["title"]) && isset($_POST["description"]) &&
-		 isset($_POST["categories"]) )
+		 isset($_POST["categories"]) && isset($_POST["authors_id"]))
 {
-	//Εδώ να μπει η συνέχεια...
+	// Εδώ να μπει η συνέχεια...
 	$book_id = (int) $_POST["update_id"];
 	if($book = Book::get($book_id))
 	{
-		$title       =  $_POST["title"];
-		$description =  $_POST["description"];
+		$title       = $_POST["title"];
+		$description = $_POST["description"];
 		
 		// http://stackoverflow.com/questions/10939840/javascript-hidden-input-array
 		// Ο πιο αδύναμος, πολύπλοκος, χάλια και ότι αλλο σκεφτείς βάλε κώδικας
 		// που έχω γράψει. Όποιον τον νοιάζει ας τον βελτιώσει.
-		$categories    =  json_decode($_POST["categories"][0]);
-		
-		$book->update($title, $description, $categories);//, '', '');
+		$categories  = json_decode($_POST["categories"]);
+		// http://usrportage.de/archives/808-Convert-an-array-of-strings-into-an-array-of-integers.html
+		$authors_id  = array_map(create_function('$value', 'return (int)$value;'),
+				$_POST["authors_id"]);
+
+		$book->update($title, $description, $categories, $authors_id);
 	}
 	
 	// Redirection to book page
@@ -138,9 +142,12 @@ elseif ( isset( $_POST["update_id"]) && checkAdminLogin() )
 		<script type="text/javascript">
 			$(document).ready(function()
 			{
-    			$("#add_li").click(function ()
+    			$("#add_li_category").click(function ()
     			{
-    				$("ol").append("<li>" + $("input").val() + "<a href=\"#\" class=\"remove\">--Διαγραφή--</a></li>");
+        			if($("#new_category").val())
+        			{
+        				$("ol").append("<li>" + $("#new_category").val() + "<a href=\"#\" class=\"remove\">--Διαγραφή--</a></li>");
+        			}
     			});
    
     			$("ol").on('click','.remove',function()
@@ -148,15 +155,26 @@ elseif ( isset( $_POST["update_id"]) && checkAdminLogin() )
     				$(this).parents('li').remove();
     			});
 
+    			$("#add_li_authors").click(function ()
+    	    	{
+    				//console.log( $("#new_author option:selected").text()+ " " +$("#new_author").val()  );
+    	    		$("ul").append("<li>" + $("#new_author option:selected").text() + "<input type='hidden' name='authors_id[]' id='authors_hidden_filed' value=" + $("#new_author").val() + "><a href=\"#\" class=\"remove\">--Διαγραφή--</a></li>");
+    	    	});
+
+    	    	$("ul").on('click','.remove',function()
+    	    	{
+    	    		$(this).parents('li').remove();
+    	    	});
+
     			$( "#update_form" ).submit(function( event ) 
     	    	{
-    				var optionTexts = [];
+    				var categories = [];
     				$("ol li").each(function( index ) 
-    	    			{ 
-    	    				optionTexts.push($(this).text().slice(0,-12)); 
-    	    				console.log( index + ": " + $( this ).text() );
-    	    			});
-        	    	document.getElementById('categories_hidden_field').value = JSON.stringify(optionTexts);
+    	    		{ 
+    					categories.push($(this).text().slice(0,-12)); 
+    	    			console.log( index + ": " + $( this ).text() );
+    	    		});
+        	    	document.getElementById('categories_hidden_field').value = JSON.stringify(categories);
     			});
 			});
 		</script>
@@ -172,6 +190,8 @@ elseif ( isset( $_POST["update_id"]) && checkAdminLogin() )
 		   
 		   	<dt><label for="categories">Κατηγορία</label></dt> 
 		   	
+		   	<!-- Δεν μπορεί να αλλάζει το ol διότι χρησιμοποιείται στην javascript
+		   	     ως κριτήριο διαχωρισμού -->
 		   	<dd><ol id="categories_ol_id">
 		   	<?php
 		   	foreach ($book->getValue("categories") as $category)
@@ -184,14 +204,59 @@ elseif ( isset( $_POST["update_id"]) && checkAdminLogin() )
 		   	?>
 			</ol>
 		   	
-		   	<!-- TODO  Μπορεί να μπει dropdown list -->
-			<input type="text" id="element" value="">
-			<input type="button" id="add_li" value="Προσθήκη" />
+			<datalist id="category_list">
+				<?php
+		   		foreach (Book::getAllCategories() as $category_new)
+		   		{
+		   			?>
+		   			<option value='<?=$category_new;?>'>		   		
+		   			<?php 
+		   			// http://stackoverflow.com/questions/3287336/best-way-to-submit-ul-via-post
+		   		}
+		   		?>
+ 			</datalist>
+ 			<input type="text" list="category_list" id="new_category" value="">
+			<input type="button" id="add_li_category" value="Προσθήκη" />
 			</dd>
+			
+			<dt><label for="authors">Συγγραφείς</label></dt> 
+		   	
+		   	<!-- Δεν μπορεί να αλλάζει το ul διότι χρησιμοποιείται στην javascript
+		   	     ως κριτήριο διαχωρισμού -->
+		   	<dd><ul id="authors_ul_id">
+		   	<?php
+		   	foreach ($book->getAuthors() as $author)
+		   	{
+		   		?>
+		   		<li><?=$author->getValueEncoded('name');?><input type='hidden' name='authors_id[]' id='authors_hidden_filed' value='<?=$author->getValueEncoded('id')?>'><a href="#" class="remove">--Διαγραφή--</a></li>		   		
+		   		<?php 
+		   		// http://stackoverflow.com/questions/3287336/best-way-to-submit-ul-via-post
+		   	}
+		   	?>
+			</ul>
+		   	
+		   	<!-- TODO  Μπορεί να μπει dropdown list -->
+			<!-- <input type="text" id="" value=""> -->
+			<select id="new_author">
+			<?php 
+			foreach (Author::getAllAuthros() as $author)
+		   	{
+		   		?>
+		   		<option value="<?=$author->getValueEncoded('id') ?>"> <?=$author->getValueEncoded('name')?></option>   		
+		   		<?php 
+		   	}
+		   	?>		
+			</select>
+			<input type="button" id="add_li_authors" value="Προσθήκη" />
+			
+			<a href="#" class="remove">--Προσθήκη συγγραφέα--</a>
+			</dd>
+			
+			
 		   	
 		   	</dl>
 		   	
-		   	<input type='hidden' name='categories[]' id="categories_hidden_field" value=" " >
+		   	<input type='hidden' name='categories' id="categories_hidden_field" value=" " >
 		   	<input type='hidden' name='update_id' value="<?= $book-> getValueEncoded('id' )?>" >
 		    <input type='submit' value='Ενημέρωση'>
 		    <input type="button" name="Ακύρωση" value="Ακύρωση"
@@ -213,6 +278,6 @@ elseif ( isset( $_POST["update_id"]) && checkAdminLogin() )
 ?>
 
 <?php 
-displayPageFooter()
+displayPageFooter();
 ?>
 

@@ -137,7 +137,7 @@ class Book extends DataObject
 		}	
 	}
 	
-	public function update($title,$description, $categories)//, & $authors, )
+	public function update($title,$description, $categories, $authors_id )
 	{
 		$conn = parent::connect();
 		$sql = 'UPDATE '. TABLE_BOOK . ' SET title = :title, 
@@ -164,7 +164,8 @@ class Book extends DataObject
 			$st-> execute();
 			
 			// Και εδώ κανονικά πρέπει να γίνει με ένα sql insert για θέμα απόδοσης
-			// αλλά άστο για άλλη φορά.			
+			// αλλά άστο για άλλη φορά.		
+			// Ακόμα δεν ελέγχω ότι η μεταβλητή που παρέχεται είναι πίνακας. 
 			foreach ($categories as $category)
 			{
 				$sql = 'INSERT INTO '. TABLE_CATEGORIES . '(book_id,type)
@@ -173,6 +174,25 @@ class Book extends DataObject
 				$st-> bindValue( ":id", $this->data['id'], PDO::PARAM_INT );
 				$st-> bindValue( ":category", $category, PDO::PARAM_STR );
 				$st-> execute();				
+			}
+			
+			// Ομοίως και εδώ !!! Πεθαίνει ένα κομμάτι μου μέσα που τα γράφω αυτά 
+			// και ξέρω ότι δεν θα τα αντικαταστήσω. Μέχρι το τέλος της εργασίας
+			// αυτής προβλέπεται να είμαι πιο νεκρός και από την νεκρά θάλασσα.
+			
+			$sql = 'DELETE FROM '. TABLE_WRITES . ' WHERE  book_id = :id';
+			$st = $conn-> prepare( $sql );
+			$st-> bindValue( ":id", $this->data['id'], PDO::PARAM_INT );
+			$st-> execute();
+				
+			foreach ($authors_id as $author_id)
+			{
+				$sql = 'INSERT INTO '. TABLE_WRITES . '(author_id,book_id)
+					VALUES(:author_id,:book_id)';
+				$st = $conn-> prepare( $sql );
+				$st-> bindValue( ":book_id", $this->data['id'], PDO::PARAM_INT );
+				$st-> bindValue( ":author_id", $author_id, PDO::PARAM_INT );
+				$st-> execute();
 			}
 			
 			parent::disconnect( $conn );
@@ -214,7 +234,7 @@ class Book extends DataObject
 		{
 			$st = $conn-> prepare( $sql );
 			$st-> execute();
-			$rows = $st ->fetchAll();
+			$rows = $st->fetchAll(PDO::FETCH_COLUMN,0);
 			parent::disconnect( $conn );
 			
 			return $rows;

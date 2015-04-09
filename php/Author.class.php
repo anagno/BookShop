@@ -4,6 +4,41 @@ require_once "DataObject.class.php";
 
 class Author extends DataObject 
 {
+	
+	// Μάλλον μια κακή συνάρτηση διότι θέλει πολύ ογκο δεδομένων.
+	// Άμα σκεφτεί κανείς κανένα καλύτερο τρόπο ας τον εφαρμόσει αν δεν βαριέται.
+	public static function getAllAuthros()
+	{
+		$conn = parent::connect();
+		$sql = 'SELECT * FROM ' . TABLE_AUTHOR . ' ORDER BY name ASC';
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> execute();
+			$rows = $st-> fetchAll(PDO::FETCH_COLUMN);
+			parent::disconnect( $conn );
+				
+			if ( $rows )
+			{
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				$authors = array();
+				
+				foreach ($rows as $row)
+				{
+					array_push($authors, self::get($row) );
+				}		
+				
+				return $authors;
+			}	
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}	
+	}
+	
+	
 	public static function get($id) 
 	{
 		$conn = parent::connect();
