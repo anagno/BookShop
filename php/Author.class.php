@@ -102,7 +102,12 @@ class Author extends DataObject
 			$st = $conn-> prepare( $sql );
 			$st-> bindValue( ":name", $name, PDO::PARAM_STR );
 			$st-> execute();
+			
+			$new_author_id = $conn->lastInsertId();
+			
 			parent::disconnect( $conn );
+			
+			return $new_author_id;
 
 		}
 		catch ( PDOException $e )
@@ -112,14 +117,37 @@ class Author extends DataObject
 		}
 	}
 	
-	public static function delete($id)
+	public function update($name)
+	{
+		$conn = parent::connect();
+		$sql = 'UPDATE '. TABLE_AUTHOR . ' SET name = :name
+						WHERE id = :id';
+		try
+		{
+			// Κανονικά πρέπει να μπουν έλεγχοι για να μην σκάει όταν περνάνε
+			// λάθος ορίσματα. Όποιος έχει όρεξη ας το κάνει.
+			$st = $conn-> prepare( $sql );
+			$st-> bindValue( ":id", $this->data['id'], PDO::PARAM_INT );
+			$st-> bindValue( ":name", $name, PDO::PARAM_STR );
+			$st-> execute();
+		
+			parent::disconnect( $conn );
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
+	}
+		
+	public function delete()
 	{
 		$conn = parent::connect();
 		$sql = 'DELETE FROM ' . TABLE_AUTHOR . ' WHERE id = :id';
 		try
 		{
 			$st = $conn-> prepare( $sql );
-			$st-> bindValue( ":id", $id, PDO::PARAM_INT );
+			$st-> bindValue( ":id", $this->data['id'], PDO::PARAM_INT );
 			$st-> execute();
 			parent::disconnect( $conn );
 	

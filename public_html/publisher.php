@@ -85,14 +85,14 @@ if ( isset( $_GET["id"] ) )
 				<a href="book.php?id=<?=$edition->getBookId();?>"><?=$edition->getBookTitleString();?></a>
 				</td><td>
 				<a href="edition.php?isbn=<?=$edition->getValueEncoded("isbn");?>"><?=$edition->getValueEncoded("isbn");?></a>
+				</td><td>
+				<?=$edition->getValueEncoded("edition")?>				
+				</td><td>
+				<?=$edition->getValueEncoded("date")?>
+				</td><td>
+				<?=$edition->getValueEncoded("language")?>
+				</td> </tr>
 				<?php 
-				echo "</td><td>";
-				echo $edition->getValueEncoded("edition");
-				echo "</td><td>";
-				echo $edition->getValueEncoded("date");
-				echo "</td><td>";
-				echo $edition->getValueEncoded("language");
-				echo "</td> </tr>";
 			}
 		}
 		?>

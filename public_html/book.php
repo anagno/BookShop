@@ -71,12 +71,35 @@ if ( isset( $_GET["id"] ) )
 			<?php 
 		}
 		
+		?>
+		
+		<!-- https://datatables.net/examples/basic_init/alt_pagination.html -->
+		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<script src="http://cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.6/css/jquery.dataTables.css"/>
+		<script type="text/javaScript">
+			$(document).ready(function() 
+			{
+    			$('#pagination').dataTable( 
+    	    	{
+        			"pagingType": "full_numbers"
+    			});
+			});		
+		</script>
+		
+		<h2> Εκδόσεις </h2>
+		
+		<table id='pagination'>
+		<thead>
+		<tr><td> ISBN </td><td> Εκδότης </td><td> Έκδ. </td><td> Ημ/νια </td><td> Γλώσσα </td> </tr>
+		</thead>
+		<tfoot>
+		<tr><td> ISBN </td><td> Εκδότης </td><td> Έκδ. </td><td> Ημ/νια </td><td> Γλώσσα </td> </tr>
+		</tfoot>
+		<tbody>
+		<?php 
 		if($book_editions = Edition::getByBook($book))
 		{		
-			echo "<h2> Εκδόσεις </h2>";
-			
-			echo "<table>";
-			echo "<tr><td> ISBN </td><td> Εκδότης </td><td> Έκδ. </td><td> Ημ/νια </td><td> Γλώσσα </td> </tr>";
 			foreach ($book_editions as $edition)
 			{
 				?>
@@ -93,10 +116,11 @@ if ( isset( $_GET["id"] ) )
 				echo $edition->getValueEncoded("language");
 				echo "</td> </tr>";
 			}
-			
-			echo "</table>";
 		}
 		?>
+		
+		</tbody>
+		</table>
 
 		<?php
 		if(checkAdminLogin())
@@ -348,6 +372,16 @@ elseif ( ( isset( $_POST["update_id"]) && checkAdminLogin() ) ||
 	   			// http://stackoverflow.com/questions/3287336/best-way-to-submit-ul-via-post
 	   		}
 	   	}
+	   	
+	   	if(isset($_POST["author_id"]))
+	   	{
+	   		$author_id = $_POST["author_id"];
+	   		$author = Author::get($author_id)
+   			?>
+	   		<li><?=$author->getValueEncoded('name');?><input type='hidden' name='authors_id[]' id='authors_hidden_filed' value='<?=$author->getValueEncoded('id')?>'><a href="#" class="remove">--Διαγραφή--</a></li>		   		
+	   		<?php 
+
+	   	}
 	   	?>
 		</ul>
 	   	
@@ -365,8 +399,9 @@ elseif ( ( isset( $_POST["update_id"]) && checkAdminLogin() ) ||
 		</select>
 		<input type="button" id="add_li_authors" value="Προσθήκη" />
 		
-		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-		<a href="#" class="remove">--Προσθήκη συγγραφέα--</a>
+		<!-- TODO Να αφαιρέσουμε το λινκ και να βάλουμε form έτσι ώστε μετά την δημιουργία
+		     του συγγραφέα να μπορούμε να επιστρέψουμε σε αυτή την φόρμα. -->
+		<a href="author.php?new" class="remove">--Προσθήκη συγγραφέα--</a>
 		</dd>
 				   	
 	   	</dl>
@@ -388,9 +423,23 @@ elseif ( ( isset( $_POST["update_id"]) && checkAdminLogin() ) ||
 	   		?>
 	   		<input type='hidden' name='new' value='-1' >
 	   		<input type='submit' value='Δημιουργία'>
-	   		<input type="button" name="Ακύρωση" value="Ακύρωση"
-			onclick="window.location='book.php'" />
-   		<?php
+	   		
+	   		<?php 
+	   		if(isset($_POST["author_id"]))
+	   		{
+	   			$author_id = $_POST["author_id"];
+	   			?>
+	   		   		<input type="button" name="Ακύρωση" value="Ακύρωση"
+						onclick="window.location='author.php?id=<?= $author_id ?>'" />
+	   			<?php 	   			
+	   		}	
+	   		else
+	   		{
+	   		?>
+	   			<input type="button" name="Ακύρωση" value="Ακύρωση"
+						onclick="window.location='book.php'" />
+   			<?php
+	   		}
 	   	} 
 	   	?>    
 							

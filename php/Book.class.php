@@ -15,7 +15,7 @@ class Book extends DataObject
 		// please increment the following counter as a warning
 		// to the next guy:
 		//
-		// total_hours_wasted_here = 1
+		// total_hours_wasted_here = 11
 		//
 		// http://stackoverflow.com/questions/184618/what-is-the-best-comment-in-source-code-you-have-ever-encountered
 		$conn = parent::connect();
