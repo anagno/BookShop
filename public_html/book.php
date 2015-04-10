@@ -23,8 +23,25 @@ if ( isset( $_GET["id"] ) )
 		<dt> Αύξων Αριθμός </dt> <dd> <?php echo $book-> getValueEncoded( "id" ) ?> </dd>
 		<dt> Τίτλος </dt> <dd> <?php echo $book-> getValueEncoded( "title" ) ?> </dd>
 		<dt> Περιγραφή </dt> <dd> <?php echo $book-> getValueEncoded( "description" ) ?> </dd>
-		<dt> Κατηγορία </dt> <dd> <?php echo $book->getCategoriesString() ?> </dd>
-		<dt> Συγγραφείς </dt> <dd> <?php echo $book->getAuthorsString() ?> </dd>
+		<dt> Κατηγορία </dt> <dd> <?php echo $book->getCategoriesString() ?> </dd>	
+		<dt> Συγγραφείς </dt> 
+		<dd>
+		<?php 
+		// http://stackoverflow.com/questions/9700012/php-foreach-if-array-last
+		foreach ($book->getAuthors() as $author)
+		{
+			?>
+			<a href="author.php?id=<?=$author->getValueEncoded("id");?>"><?=$author->getValueEncoded("name");?></a>  
+			<?php 
+			if( end($book->getAuthors()) !== $author)
+			{
+    			echo ', '; // not the last element
+			}
+		}
+		?>
+		</dd>
+		
+		
 	
 		</dl>
 		
@@ -62,13 +79,13 @@ if ( isset( $_GET["id"] ) )
 			echo "<tr><td> ISBN </td><td> Εκδότης </td><td> Έκδ. </td><td> Ημ/νια </td><td> Γλώσσα </td> </tr>";
 			foreach ($book_editions as $edition)
 			{
-				echo "<tr><td>";
 				?>
+				<tr><td>
 				<a href="edition.php?isbn=<?=$edition->getValueEncoded("isbn");?>" class="remove"><?=$edition->getValueEncoded("isbn");?></a>
+				</td><td>
+				<a href="publisher.php?id=<?=$edition->getPublishersId();?>" class="remove"><?=$edition->getPublishersString();?></a>
+				</td><td>
 				<?php 
-				echo "</td><td>";
-				echo $edition->getPublishersString();
-				echo "</td><td>";
 				echo $edition->getValueEncoded("edition");
 				echo "</td><td>";
 				echo $edition->getValueEncoded("date");
@@ -114,7 +131,7 @@ elseif (isset( $_POST["delete_id"]) && checkAdminLogin())
 		
 		?>
 		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-		<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+		<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 					
 		<?php 
 	}
@@ -123,7 +140,7 @@ elseif (isset( $_POST["delete_id"]) && checkAdminLogin())
 		displayPageHeader( "Αποτυχία διαγραφής βιβλίου" );
 		?>
 		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-		<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+		<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 			
 		<?php
 		displayPageFooter();
@@ -186,7 +203,7 @@ elseif ( isset($_POST["new"]) && checkAdminLogin() &&
 		displayPageHeader( "Αποτυχία δημιουργίας βιβλίου" );
 		?>
 		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-		<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+		<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 					
 		<?php
 		displayPageFooter();
@@ -209,7 +226,7 @@ elseif ( ( isset( $_POST["update_id"]) && checkAdminLogin() ) ||
 			displayPageHeader( "Αδυναμία ενημέρωσης εγγραφής" );
 			?>
 			<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-			<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+			<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 			
 			<?php 
 			displayPageFooter();

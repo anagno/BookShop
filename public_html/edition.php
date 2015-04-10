@@ -22,7 +22,7 @@ if ( isset($_GET["isbn"]) )
 	
 		<dt> ISBN </dt> <dd> <?php echo $edition-> getValueEncoded( "isbn" ) ?> </dd>					
 		<dt> Τίτλος </dt> <dd> <a href="book.php?id=<?=$edition->getBookId();?>"><?=$edition-> getBookTitleString();?></a></dd>
-		<dt> Εκδότης </dt> <dd> <?php echo $edition->getPublishersString() ?> </dd>
+		<dt> Εκδότης </dt> <dd> <a href="publisher.php?id=<?=$edition->getPublishersId();?>"><?=$edition->getPublishersString();?></a></dd>
 		<dt> Έκδοση </dt> <dd> <?php echo $edition->getValueEncoded( "edition" ) ?> </dd>
 		<dt> Ημερομηνία έκδοσης </dt> <dd> <?php echo $edition->getValueEncoded( "date" ) ?> </dd>
 		<dt> Γλώσσα </dt> <dd> <?php echo $edition->getValueEncoded( "language" ) ?> </dd>
@@ -58,7 +58,16 @@ if ( isset($_GET["isbn"]) )
 		
 	}
 	else 
-		displayPageHeader( "Το βιβλίο δεν βρέθηκε" );
+	{
+		displayPageHeader( "Η έκδοση δεν βρέθηκε" );
+		?>
+		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
+		<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+		
+		<?php
+		displayPageFooter();
+		exit();
+	}
 	
 }
 elseif(isset( $_POST["delete_id"]) && checkAdminLogin())
@@ -74,7 +83,7 @@ elseif(isset( $_POST["delete_id"]) && checkAdminLogin())
 	
 		?>
 		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-		<a href="book.php?id=<?=$edition->getBookId();?>" class="remove">--Ανακατεύθυνση στην στο βιβλίο--</a>
+		<a href="book.php?id=<?=$edition->getBookId();?>" >--Ανακατεύθυνση στην στο βιβλίο--</a>
 					
 		<?php 
 	}
@@ -83,7 +92,7 @@ elseif(isset( $_POST["delete_id"]) && checkAdminLogin())
 		displayPageHeader( "Αποτυχία διαγραφής βιβλίου" );
 		?>
 		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-		<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+		<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 	
 		<?php
 		displayPageFooter();
@@ -139,7 +148,7 @@ elseif ( isset($_POST["new"]) && checkAdminLogin() &&
 		displayPageHeader( "Αδυναμία δημιουργίας εγγραφής" );
 		?>
 		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-		<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+		<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 					
 		<?php 
 		displayPageFooter();
@@ -161,7 +170,7 @@ elseif ( ( isset( $_POST["update_id"]) && checkAdminLogin() ) ||
 			displayPageHeader( "Αδυναμία ενημέρωσης εγγραφής" );
 			?>
 			<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-			<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+			<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 			
 			<?php 
 			displayPageFooter();
@@ -269,7 +278,27 @@ elseif ( ( isset( $_POST["update_id"]) && checkAdminLogin() ) ||
 	   			} 
 	   		}
 	   	}
-	   	else 
+	   	elseif(isset($_POST["publisher_id"])) 
+	   	{
+	   		$publisher_id = $_POST["publisher_id"];
+	   		
+	   		foreach (Publisher::getAllPublishers() as $publisher)
+	   		{
+	   			if ($publisher->getValueEncoded('id') === $publisher_id)
+	   			{
+	   				?>
+	   				<option selected="selected" value="<?=$publisher->getValueEncoded('id') ?>"> <?=$publisher->getValueEncoded('name')?></option>
+	   			   	<?php	 
+	   			}
+	   			else 
+	   			{
+	   			   	?>
+	   			 	<option value="<?=$publisher->getValueEncoded('id') ?>"> <?=$publisher->getValueEncoded('name')?></option>   		
+	   			 	<?php
+	   			} 
+	   		}
+	   	}
+	   	else
 	   	{
 	   		foreach (Publisher::getAllPublishers() as $publisher)
 	   		{
@@ -315,9 +344,30 @@ elseif ( ( isset( $_POST["update_id"]) && checkAdminLogin() ) ||
 	   		?>
 	   		<input type='hidden' name='new' value='-1' >
 	   		<input type='submit' value='Δημιουργία'>
-	   		<input type="button" name="Ακύρωση" value="Ακύρωση"
-			onclick="window.location='edition.php'" />
-   		<?php
+	   		<?php
+	   		if(isset($_POST["book_id"]))
+	   		{
+	   			$book_id = $_POST["book_id"];
+	   			?>
+	   			<input type="button" name="Ακύρωση" value="Ακύρωση"
+				onclick="window.location='book.php?id=<?= $book_id?>'" />
+	   			<?php
+	   		}
+	   		elseif(isset($_POST["publisher_id"]))
+	   		{
+	   			$publisher_id = $_POST["publisher_id"];
+	   			?>
+	   			<input type="button" name="Ακύρωση" value="Ακύρωση"
+	   			onclick="window.location='publisher.php?id=<?= $publisher_id?>'" />
+	   			<?php
+	   		}
+	   		else
+	   		{
+	   			?>
+		   		<input type="button" name="Ακύρωση" value="Ακύρωση"
+				onclick="window.location='edition.php'" />
+				<?php
+	   		}
 	   	} 
 	   	?>    
 	</form>
