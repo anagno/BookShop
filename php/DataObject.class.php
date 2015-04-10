@@ -52,7 +52,7 @@ abstract class DataObject
 		} 
 		else 
 		{
-			die("Field not found");
+			die("Field not found on DataObject.class");
 		}
 	}
 	
