@@ -28,33 +28,7 @@ if ( isset( $_GET["id"] ) )
 	
 		</dl>
 		
-		<?php 
-			
-		if($book_editions = Edition::getByBook($book))
-		{		
-			echo "<h2> Εκδόσεις </h2>";
-			
-			echo "<table>";
-			echo "<tr><td> ISBN </td><td> Εκδότης </td><td> Έκδ. </td><td> Ημ/νια </td><td> Γλώσσα </td> </tr>";
-			foreach ($book_editions as $edition)
-			{
-				echo "<tr><td>";
-				echo $edition->getValueEncoded("isbn") ;
-				echo "</td><td>";
-				echo $edition->getPublishersString();
-				echo "</td><td>";
-				echo $edition->getValueEncoded("edition");
-				echo "</td><td>";
-				echo $edition->getValueEncoded("date");
-				echo "</td><td>";
-				echo $edition->getValueEncoded("language");
-				echo "</td> </tr>";
-			}
-			
-			echo "</table>";
-		}
-			
-			
+		<?php 		
 		if(checkAdminLogin())
 		{
 			?>
@@ -80,11 +54,55 @@ if ( isset( $_GET["id"] ) )
 			<?php 
 		}
 		
+		if($book_editions = Edition::getByBook($book))
+		{		
+			echo "<h2> Εκδόσεις </h2>";
+			
+			echo "<table>";
+			echo "<tr><td> ISBN </td><td> Εκδότης </td><td> Έκδ. </td><td> Ημ/νια </td><td> Γλώσσα </td> </tr>";
+			foreach ($book_editions as $edition)
+			{
+				echo "<tr><td>";
+				?>
+				<a href="edition.php?isbn=<?=$edition->getValueEncoded("isbn");?>" class="remove"><?=$edition->getValueEncoded("isbn");?></a>
+				<?php 
+				echo "</td><td>";
+				echo $edition->getPublishersString();
+				echo "</td><td>";
+				echo $edition->getValueEncoded("edition");
+				echo "</td><td>";
+				echo $edition->getValueEncoded("date");
+				echo "</td><td>";
+				echo $edition->getValueEncoded("language");
+				echo "</td> </tr>";
+			}
+			
+			echo "</table>";
+		}
+		?>
+
+		<?php
+		if(checkAdminLogin())
+		{
+			?>
+			<table>
+			<tr>
+			<td>
+				<form method='post' action='edition.php?new'>
+				<input type='hidden' name='book_id' value="<?= $book-> getValueEncoded('id' )?>" >
+				<input type='submit' value='Προσθήκη εγγραφής'>
+				</form>
+			</td>
+			
+			</tr>
+			</table>
+			<?php 
+		}
 	}
 	else 
 		displayPageHeader( "Το βιβλίο δεν βρέθηκε" );
 }
-else if (isset( $_POST["delete_id"]) && checkAdminLogin())
+elseif (isset( $_POST["delete_id"]) && checkAdminLogin())
 {
 	$book_id = (int) $_POST["delete_id"];
 	
@@ -96,13 +114,20 @@ else if (isset( $_POST["delete_id"]) && checkAdminLogin())
 		
 		?>
 		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-		<a href="#" class="remove">--Προσθήκη συγγραφέα--</a>
+		<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 					
 		<?php 
 	}
 	else 
 	{
-		displayPageHeader( "Αποτυχία διαγραφής" );
+		displayPageHeader( "Αποτυχία διαγραφής βιβλίου" );
+		?>
+		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
+		<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+			
+		<?php
+		displayPageFooter();
+		exit();
 	}
 	
 }
@@ -158,7 +183,14 @@ elseif ( isset($_POST["new"]) && checkAdminLogin() &&
 	}
 	else 
 	{
-		
+		displayPageHeader( "Αποτυχία δημιουργίας βιβλίου" );
+		?>
+		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
+		<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+					
+		<?php
+		displayPageFooter();
+		exit();
 	}
 	
 }
@@ -177,9 +209,11 @@ elseif ( ( isset( $_POST["update_id"]) && checkAdminLogin() ) ||
 			displayPageHeader( "Αδυναμία ενημέρωσης εγγραφής" );
 			?>
 			<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
-			<a href="#" class="remove">--Προσθήκη συγγραφέα--</a>
+			<a href="index.php" class="remove">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 			
 			<?php 
+			displayPageFooter();
+			exit();
 		}		
 	}
 	elseif ( isset( $_GET["new"]) && checkAdminLogin() )

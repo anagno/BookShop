@@ -99,6 +99,39 @@ class Book extends DataObject
 		}	
 	}
 	
+	// Μάλλον μια κακή συνάρτηση διότι θέλει πολύ ογκο δεδομένων.
+	// Άμα σκεφτεί κανείς κανένα καλύτερο τρόπο ας τον εφαρμόσει αν δεν βαριέται.	
+	public static function getAllTitles()
+	{
+	$conn = parent::connect();
+		$sql = 'SELECT * FROM ' . TABLE_BOOK . ' ORDER BY title ASC';
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> execute();
+			$rows = $st-> fetchAll(PDO::FETCH_COLUMN);
+			parent::disconnect( $conn );
+				
+			if ( $rows )
+			{
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				$title = array();
+				
+				foreach ($rows as $row)
+				{
+					array_push($title, self::get($row) );
+				}		
+				
+				return $title;
+			}	
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}	
+	}
+	
 	public static function add($title,$description, $categories, $authors_id )
 	{
 		//TODO: την γραμματέας μας...

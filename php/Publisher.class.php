@@ -26,6 +26,39 @@ class Publisher extends DataObject
 		}
 	}
 	
+	// Μάλλον μια κακή συνάρτηση διότι θέλει πολύ ογκο δεδομένων.
+	// Άμα σκεφτεί κανείς κανένα καλύτερο τρόπο ας τον εφαρμόσει αν δεν βαριέται.
+	public static function getAllPublishers()
+	{
+		$conn = parent::connect();
+		$sql = 'SELECT * FROM ' . TABLE_PUBLISHER . ' ORDER BY name ASC';
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> execute();
+			$rows = $st-> fetchAll(PDO::FETCH_COLUMN);
+			parent::disconnect( $conn );
+	
+			if ( $rows )
+			{
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				$publishers = array();
+	
+				foreach ($rows as $row)
+				{
+					array_push($publishers, self::get($row) );
+				}
+	
+				return $publishers;
+			}
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
+	}
+	
 	public static function add($name)
 	{					
 		$conn = parent::connect();
