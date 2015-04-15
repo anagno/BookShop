@@ -38,6 +38,11 @@ define('TABLE_EDITION', 'editions');
 define('TABLE_PUBLISHER', 'publishers');
 
 /**
+ * Defining the name of the table that is used to store the paperbooks
+ */
+define('TABLE_PAPERBOOk', 'paperbooks');
+
+/**
  * Defining the name of the table that is used to store the users
  */
 define('TABLE_USER', 'users');
