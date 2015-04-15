@@ -104,9 +104,9 @@ if ( isset( $_GET["id"] ) )
 			{
 				?>
 				<tr><td>
-				<a href="edition.php?isbn=<?=$edition->getValueEncoded("isbn");?>" class="remove"><?=$edition->getValueEncoded("isbn");?></a>
+				<a href="edition.php?isbn=<?=$edition->getValueEncoded("isbn");?>"><?=$edition->getValueEncoded("isbn");?></a>
 				</td><td>
-				<a href="publisher.php?id=<?=$edition->getPublishersId();?>" class="remove"><?=$edition->getPublishersString();?></a>
+				<a href="publisher.php?id=<?=$edition->getPublishersId();?>"><?=$edition->getPublishersString();?></a>
 				</td><td>
 				<?php 
 				echo $edition->getValueEncoded("edition");

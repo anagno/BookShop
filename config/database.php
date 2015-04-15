@@ -40,7 +40,12 @@ define('TABLE_PUBLISHER', 'publishers');
 /**
  * Defining the name of the table that is used to store the paperbooks
  */
-define('TABLE_PAPERBOOk', 'paperbooks');
+define('TABLE_PAPERBOOK', 'paperbooks');
+
+/**
+ * Defining the name of the table that is used to store the borrow history
+ */
+define('TABLE_BORROWS', 'borrows');
 
 /**
  * Defining the name of the table that is used to store the users

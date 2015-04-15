@@ -120,6 +120,39 @@ class Edition extends DataObject
 		}
 	}
 	
+	// Μάλλον μια κακή συνάρτηση διότι θέλει πολύ ογκο δεδομένων.
+	// Άμα σκεφτεί κανείς κανένα καλύτερο τρόπο ας τον εφαρμόσει αν δεν βαριέται.
+	public static function getAllIsbn()
+	{
+		$conn = parent::connect();
+		$sql = 'SELECT * FROM ' . TABLE_EDITION . ' ORDER BY isbn ASC';
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> execute();
+			$rows = $st-> fetchAll(PDO::FETCH_COLUMN);
+			parent::disconnect( $conn );
+	
+			if ( $rows )
+			{
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				$isbn = array();
+	
+				foreach ($rows as $row)
+				{
+					array_push($isbn, self::get($row) );
+				}
+	
+				return $isbn;
+			}
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
+	}
+	
 	public static function add($isbn,$book_id,$publisher_id,$edition,$date,$language)
 	{
 		

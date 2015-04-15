@@ -4,6 +4,7 @@ require_once "common.inc.php";
 require_once "../php/Edition.class.php";
 require_once "../php/Book.class.php";
 require_once "../php/Publisher.class.php";
+require_once "../php/Paperbook.class.php";
 
 
 
@@ -53,9 +54,72 @@ if ( isset($_GET["isbn"]) )
 			</table>
 					
 		<?php 
-		}
-		// TODO Να μπουν τα βιβλία τα οποία υπάρχουν στην βιβλιοθήκη
+		}	
+		?>
+				
+		<!-- https://datatables.net/examples/basic_init/alt_pagination.html -->
+		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<script src="http://cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.6/css/jquery.dataTables.css"/>
+		<script type="text/javaScript">
+			$(document).ready(function() 
+			{
+				$('#pagination').dataTable( 
+		    	{
+				"pagingType": "full_numbers"
+				});
+			});		
+		</script>
+				
+		<h2> Αντίτυπα </h2>
 		
+		<table id='pagination'>
+		<thead>
+		<tr><td> Κωδικός </td><td> Βιβλιοδεσία </td><td> Διαθέσιμο </td></tr>
+		</thead>
+		<tfoot>
+		<tr><td> Κωδικός </td><td> Βιβλιοδεσία </td><td> Διαθέσιμο </td></tr>
+		</tfoot>
+		<tbody>
+		
+		<?php 
+		if($paperbook_editions = Paperbook::getByEdition($edition))
+		{		
+			foreach ($paperbook_editions as $paperbook)
+			{
+				?>
+				<tr><td>
+				<a href="paperbook.php?id=<?=$paperbook->getValueEncoded("id");?>"><?=$paperbook->getValueEncoded("id");?></a>
+				</td><td>
+				<?=$paperbook->getValueEncoded("binding");?>
+				</td><td>
+				<?php ?>
+				</td></tr>
+				<?php 
+			}
+		}
+		?>
+		
+		</tbody>
+		</table>
+		
+		<?php
+		if(checkAdminLogin())
+		{
+			?>
+			<table>
+			<tr>
+			<td>
+				<form method='post' action='paperbook.php?new'>
+				<input type='hidden' name='edition_isbn' value="<?= $edition-> getValueEncoded( "isbn" )?>" >
+				<input type='submit' value='Προσθήκη εγγραφής'>
+				</form>
+			</td>
+			
+			</tr>
+			</table>
+			<?php 
+		}
 	}
 	else 
 	{
