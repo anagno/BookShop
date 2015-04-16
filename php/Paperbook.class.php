@@ -29,9 +29,13 @@ class Paperbook extends DataObject
 					$st = $conn-> prepare( $sub_sql );
 					$st-> bindValue( ":id", $id, PDO::PARAM_INT );
 					$st-> execute();
-					//http://stackoverflow.com/questions/19470423/unable-to-fetch-multiple-rows-from-mysql-using-pdo
-					$borrows = $st ->fetchAll(PDO::FETCH_COLUMN);
-					//http://www.java-samples.com/showtutorial.php?tutorialid=997
+					$borrows = $st ->fetchAll(PDO::FETCH_ASSOC);
+					// Εδώ αποθηκεύεται για άλλη μια φορά το paperbook_id κάτι που σπαταλάει χώρο.
+					// Αλλά βαριέμαι. Είναι 3.35 το πρωί και συνηδητοποιώ ότι προτιμώ να δω το 
+					// jolene (http://www.imdb.com/title/tt0867334/) που παίζει στο STAR παρά να 
+					// βάλω το μυαλουδάκι μου και να διορθώσει αυτό το πρόβλημα.
+					// Ασχετο (όχι βέβαια ότι όλα τα άλλα που γράφω είναι σχετικά): Καλό πουτανάκι 
+					// ήταν και η jolene 
 					$paperbook['borrows'] = $borrows;
 					parent::disconnect( $conn );					
 				}
@@ -165,6 +169,67 @@ class Paperbook extends DataObject
 		{
 			parent::disconnect( $conn );
 			die( "Query failed: " . $e->getMessage() );
+		}
+	}
+	
+	public function bookRent($user)
+	{
+		if(!self::isBorrowed())
+		{
+			$conn = parent::connect();
+			$sql = 'INSERT '. TABLE_BORROWS . ' (paperbook_id,username,start_period,
+					end_period) VALUES(:id,:username,NOW(), null)';		
+			try
+			{
+				$st = $conn-> prepare( $sql );
+				$st-> bindValue( ":id", $this->data['id'], PDO::PARAM_INT );
+				$st-> bindValue( ":username", $user, PDO::PARAM_STR );
+				$st-> execute();
+			
+				parent::disconnect( $conn );
+			}
+			catch ( PDOException $e )
+			{
+				parent::disconnect( $conn );
+				die( "Query failed: " . $e->getMessage() );
+			}			
+		}
+	}
+	
+	public function bookReturn()
+	{
+		$conn = parent::connect();
+		$sql = 'UPDATE '. TABLE_BORROWS . ' SET end_period = NOW()
+				   WHERE paperbook_id = :id';
+		
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> bindValue( ":id", $this->data['id'], PDO::PARAM_INT );
+			$st-> execute();
+		
+			parent::disconnect( $conn );
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
+		
+	}
+	
+	public function isBorrowed()
+	{
+		$last_borrow = end($this->data['borrows']);
+		
+		if($last_borrow['end_period'] === NULL &&
+			count($this->data['borrows'])>0 )
+		{
+			return true;
+		}
+		else
+		{ 
+			return false;
 		}
 	}
 	

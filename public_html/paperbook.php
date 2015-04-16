@@ -1,6 +1,7 @@
 <?php
 require_once "common.inc.php";
 require_once "../php/Paperbook.class.php";
+require_once "../php/User.class.php";
 
 $paperbook = "";
 
@@ -62,37 +63,76 @@ if ( isset( $_GET["id"] ) )
 			});		
 		</script>
 		
-		<h2> Ιστορικό </h2>
+		<?php
+		if(checkAdminLogin())
+		{
+			?>
 		
-		<table id='pagination'>
-		<thead>
-		<tr><td> Ημερομηνία έναρξης </td><td> Ημερομηνία λήξης </td><td> Χρήστης </td></tr>
-		</thead>
-		<tfoot>
-		<tr><td> Ημερομηνία έναρξης </td><td> Ημερομηνία λήξης </td><td> Χρήστης </td></tr>
-		</tfoot>
-		<tbody>
+			<h2> Ιστορικό </h2>
+			
+			<?php 
+			if(!$paperbook->isBorrowed())
+			{
+				?>
+				<form method='post' action='paperbook.php'>
+				<input type='hidden' name='rent_id' value="<?= $paperbook-> getValueEncoded( "id" )?>" >
+				<select id="new_rent_user" name="user">
+				<?php 				
+				foreach (User::getAllUsers() as $user)
+	    		{
+	    			?>
+	    			<option value="<?=$user->getValueEncoded('username') ?>"> <?=$user->getUserName()?></option>
+	    			<?php
+	   			}	
+	   			?>
+				</select>					
+				<input type='submit' value='Δανεισμός'>
+				</form>
+			<?php 	
+			}
+			else 
+			{
+				?>
+				<form method='post' action='paperbook.php'>
+				<input type='hidden' name='rent_id' value="<?= $paperbook-> getValueEncoded( "id" )?>" >
+				<input type='submit' value='Επιστροφή'>
+				</form>
+				<?php 
+			}
+			?>
+		
+			<table id='pagination'>
+			<thead>
+			<tr><td> Ημερομηνία έναρξης </td><td> Ημερομηνία λήξης </td><td> Χρήστης </td></tr>
+			</thead>
+			<tfoot>
+			<tr><td> Ημερομηνία έναρξης </td><td> Ημερομηνία λήξης </td><td> Χρήστης </td></tr>
+			</tfoot>
+			<tbody>
+			<?php 
+			if($history_log = $paperbook->getValue('borrows'))
+			{		
+				foreach ($history_log as $log)
+				{
+					?>
+					<tr><td>
+					<?=$log['start_period']; ?>
+					</td><td>
+					<?=$log['end_period']; ?>
+					</td><td>
+					<?=$log['username']; ?>
+					</td></tr>		
+					<!-- https://www.youtube.com/watch?v=wOwblaKmyVw -->			
+					<?php 
+				}
+			}
+			?>
+		
+			</tbody>
+			</table>
+			
 		<?php 
-		//if($book_editions = Edition::getByBook($book))
-		//{		
-		//	foreach ($book_editions as $edition)
-		//	{
-		//		echo $edition->getValueEncoded("edition");
-		//		echo "</td><td>";
-		//		echo $edition->getValueEncoded("date");
-		//		echo "</td><td>";
-		//		echo $edition->getValueEncoded("language");
-		//		echo "</td> </tr>";
-		//	}
-		//}
-		?>
-		
-		</tbody>
-		</table>
-		
-		
-		
-		<?php 		
+		}	
 	}
 	else
 	{
@@ -101,6 +141,49 @@ if ( isset( $_GET["id"] ) )
 		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
 		<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
 		
+		<?php
+		displayPageFooter();
+		exit();
+	}
+}
+elseif(isset( $_POST["rent_id"]) && checkAdminLogin())
+{
+	$rent_id = (string) $_POST["rent_id"];
+
+	if($paperbook = Paperbook::get($rent_id))
+	{
+		if(!$paperbook->isBorrowed())
+		{
+			if(isset( $_POST["user"]))
+			{
+				$user = (string) $_POST["user"];
+				$paperbook->bookRent($user);
+			
+				displayPageHeader( "Επιτυχής ενοικιάση του βιβλίου με κωδικό " .
+						$paperbook->getValueEncoded( "id" ) ) ;
+			}	
+		}
+		else 
+		{
+			$paperbook->bookReturn();
+				
+			displayPageHeader( "Επιτυχής επιστροφή του βιβλίου με κωδικό " .
+					$paperbook->getValueEncoded( "id" ) ) ;			
+		}
+		
+		?>
+		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
+		<a href="paperbook.php?id=<?=$rent_id;?>" >--Ανακατεύθυνση πίσω στο αντίτυπο--</a>				
+		<?php 
+		
+	}
+	else 
+	{
+		displayPageHeader( "Αποτυχία ενημέρωσης εγγραφής" );
+		?>
+		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
+		<a href="index.php" >--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+	
 		<?php
 		displayPageFooter();
 		exit();
