@@ -54,6 +54,37 @@ class User extends DataObject
 		}
 	}
 	
+	public static function getAllUsers()
+	{
+		$conn = parent::connect();
+		$sql = 'SELECT * FROM ' . TABLE_USER ;
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> execute();
+			$rows = $st-> fetchAll(PDO::FETCH_COLUMN);
+			parent::disconnect( $conn );
+				
+			if ( $rows )
+			{
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				$users = array();
+				
+				foreach ($rows as $row)
+				{
+					array_push($users, self::get($row) );
+				}
+				
+				return $users;
+			}
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
+	}
+	
 	public static function check($username)
 	{
 		$conn = parent::connect();
@@ -112,10 +143,10 @@ class User extends DataObject
 		}
 	}
 	
-	public static function updatePrivileges($username)
+	public function updatePrivileges()
 	{
 		//Check if the username exists.
-		if(self::check($username))
+		if(self::check($this->data['username']))
 		{		
 			$conn = parent::connect();
 			$sql = 'UPDATE '. TABLE_USER . ' SET is_admin = 1 
@@ -123,7 +154,7 @@ class User extends DataObject
 			try
 			{
 				$st = $conn-> prepare( $sql );
-				$st-> bindValue( ":username", $username, PDO::PARAM_STR );
+				$st-> bindValue( ":username", $this->data['username'], PDO::PARAM_STR );
 				$st-> execute();
 				parent::disconnect( $conn );
 			
@@ -139,10 +170,10 @@ class User extends DataObject
 			return FALSE;
 	}
 	
-	public static function removePrivileges($username)
+	public function removePrivileges()
 	{
 		//Check if the username exists.
-		if(self::check($username))
+		if(self::check($this->data['username']))
 		{
 			$conn = parent::connect();
 			$sql = 'UPDATE '. TABLE_USER . ' SET is_admin = 0
@@ -150,7 +181,7 @@ class User extends DataObject
 			try
 			{
 				$st = $conn-> prepare( $sql );
-				$st-> bindValue( ":username", $username, PDO::PARAM_STR );
+				$st-> bindValue( ":username", $this->data['username'], PDO::PARAM_STR );
 				$st-> execute();
 				parent::disconnect( $conn );
 					
@@ -166,14 +197,14 @@ class User extends DataObject
 			return FALSE;
 	}
 	
-	public static function delete($uid)
+	public function delete()
 	{
 		$conn = parent::connect();
 		$sql = 'DELETE FROM ' . TABLE_USER . ' WHERE uid = :uid';
 		try
 		{
 			$st = $conn-> prepare( $sql );
-			$st-> bindValue( ":uid", $uid, PDO::PARAM_INT );
+			$st-> bindValue( ":uid", $this->data['uid'], PDO::PARAM_INT );
 			$st-> execute();
 			parent::disconnect( $conn );
 	
@@ -195,6 +226,12 @@ class User extends DataObject
 		{
 			return FALSE;
 		}
+	}
+	
+	public function getUserName()
+	{
+		return $this->data["first_name"] . " " .
+				$this->data["last_name"];
 	}
 	
 	public function getGenderString()

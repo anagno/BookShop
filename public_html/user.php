@@ -3,7 +3,60 @@
 require_once "common.inc.php";
 require_once "../php/User.class.php";
 
-if(checkLogin())
+if(isset( $_POST["delete_id"]) && checkAdminLogin())
+{
+	$user_id = (int) $_POST["delete_id"];
+	
+	if($user = User::get($user_id))
+	{
+		// Εδώ ανοίγω την πόρτα των καημών διότι δεν κάνω έλεγχο αν υπάρχει έστω και ένας 
+		// διαχειριστής στην εφαρμογή με αποτέλεσμα κάποιος έξυπνος να κλειδώσει εντελώς 
+		// την εφαρμογή. Αλλά δεν γαμιέται ...
+		$user->delete($user_id);
+	
+		displayPageHeader( "Επιτυχής διαγραφή του χρήστη " );
+	
+		?>
+		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
+		<a href="user.php">--Επιστροφή--</a>
+				
+		<?php 
+	}
+	else 
+	{
+		displayPageHeader( "Αποτυχία διαγραφής χρήστη" );
+		?>
+		<!-- TODO Να φτιάξουμε το λινκ να πηγαίνει κάπου χρήσιμα -->
+		<a href="index.php">--Ανακατεύθυνση στην κεντρική σελίδα--</a>
+		
+		<?php
+		displayPageFooter();
+		exit();
+	}
+}
+elseif ( isset($_POST["update_id"]) && checkAdminLogin() )
+{
+	$user_id = (int) $_POST["update_id"];
+	
+	// Και εδώ τα τραβάει ο κώλος μου διότι δεν κάνω ποτέ έλεγχο αν υπάρχει τουλάχιστον ένας
+	// διαχειριστής, με αποτέλεσμα να κλειδωθούν όλοι εκτός της εφαρμογής.
+	if($user = User::get($user_id))
+	{
+		if(!$user->isAdmin())
+		{
+			$user->updatePrivileges();			
+		}
+		else 
+		{
+			$user->removePrivileges();
+		}
+	}
+
+	// Redirection to user page
+	header("Location:user.php");
+	exit();	
+}
+elseif(checkLogin())
 {
 	$user = $_SESSION['current_user'];
 	
@@ -30,21 +83,6 @@ if(checkLogin())
 	
 	</dl>
 	<?php
-	if(checkAdminLogin())
-	{
-		?>		
-		<table>
-			<tr>
-			<td>
-				<form method='post' action='user.php'>
-				<input type='hidden' name='update_id' value="<?= $user-> getValueEncoded( "username" )?>" >
-				<input type='submit' value='Ενημέρωση στοιχείων'>
-				</form>
-			</td>
-		</table>					
-		<?php 
-	}
-	
 	if($user->isAdmin())
 	{
 		?>
@@ -95,22 +133,30 @@ if(checkLogin())
 			</td><td>
 			<?=$user_list->getValueEncoded("email")?>
 			</td><td>
-			<?php 
+			
+			<form method='post' action='user.php'>
+			<input type='hidden' name='update_id' value="<?=$user_list->getValueEncoded("uid");?>" >
+			<?php 			
 			if(!$user_list->isAdmin())
 			{
 				?>
-				<a href="User.php?id=<?=$user_list->getValueEncoded("username");?>">Αναβάθμιση δικαιωμάτων</a>
+				<input type='submit' value='Αναβάθμιση'>
 				<?php
 			}
 			else 
 			{
 				?>
-				<a href="User.php?id=<?=$user_list->getValueEncoded("username");?>">Υποβάθμιση δικαιωμάτων</a>
+				<input type='submit' value='Υποβάθμιση'>
 				<?php								
 			}			
 			?>
+			</form>
+			
 			</td><td>
-			<a href="User.php?id=<?=$user_list->getValueEncoded("username");?>">Διαγραφή χρήστη</a>
+			<form method='post' action='user.php'>
+			<input type='hidden' name='delete_id' value="<?=$user_list->getValueEncoded("uid");?>" >
+			<input type='submit' value='Διαγραφή'>
+			</form>
 			</td> </tr>
 			<?php 
 		}
