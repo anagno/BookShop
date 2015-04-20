@@ -11,8 +11,8 @@ exit;
 }
 
 // Otherwise we connect to our Database
-mysql_connect("host.com", "user-name", "password") or die(mysql_error());
-mysql_select_db("db-name") or die(mysql_error());
+mysql_connect("localhost", "tme119", "tme119_password") or die(mysql_error());
+mysql_select_db("tme119") or die(mysql_error());
 
 // We perform a bit of filtering
 $find = strtoupper($find);
