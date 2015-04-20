@@ -62,6 +62,40 @@ class Book extends DataObject
 		}
 	}
 	
+	public static function search($search_parameter)
+	{
+		$search_parameter = "%" . $search_parameter . "%";
+		$conn = parent::connect();
+		$sql = 'SELECT * FROM ' . TABLE_BOOK . ' WHERE title LIKE :search';
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> bindValue( ":search", $search_parameter, PDO::PARAM_STR );
+			$st-> execute();
+			$rows = $st ->fetchAll();
+			parent::disconnect( $conn );
+		
+			if($rows)
+			{
+				$books = array();
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				foreach ($rows as $row)
+				{
+					array_push($books, self::get($row['id']));
+				}
+		
+				return $books;
+		
+			}
+		}
+		catch (PDOException $e)
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
+		
+	}
+	
 	public static function getByAuthor(Author $author)
 	{
 		$conn = parent::connect();
