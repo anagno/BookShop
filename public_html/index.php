@@ -20,7 +20,7 @@ $find = strip_tags($find);
 $find = trim ($find);
 
 //Now we search for our search term, in the field the user specified
-$iname = mysql_query("SELECT * FROM db_table WHERE name LIKE '%$find%'");
+$iname = mysql_query("SELECT * FROM table_book WHERE books LIKE '%$find%'");
 
 //And we display the results
 while($result = mysql_fetch_array( $iname ))
