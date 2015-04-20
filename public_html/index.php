@@ -25,11 +25,11 @@ $iname = mysql_query("SELECT * FROM db_table WHERE name LIKE '%$find%'");
 //And we display the results
 while($result = mysql_fetch_array( $iname ))
 {
-echo $result['book-name'];
+echo $result['books'];
 echo " ";
-echo $result['writer'];
+echo $result['authors'];
 echo "<br>";
-echo $result['publish'];
+echo $result['editions'];
 echo "<br>";
 echo "<br>";
 }
