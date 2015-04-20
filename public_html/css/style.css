@@ -6,7 +6,111 @@
 
 body 
 { 
-	font-family: Arial, Helvetica, sans-serif; 
+	text-align: center; 
+	background-color: #FFFFCC;
+	background-image: url('books.png'); /*Η εικόνα που θα βρίσκεται στο background αν κάποιος έχει μεγαλύτερη οθόνη.*/
+	font-family: "Arial Black",Arial, Gadget,Helvetica, sans-serif;
+	font-size: 13px;
+	color: black;
+}
+
+#container
+{
+	border: 1px solid #827C78;
+	background-color: #FFFFCC;
+	width: 1000px; /*Το μέγεθος της σελίδας σε πλάτος*/
+	margin: 20px auto; /*Είναι το περιθώριο πάνω*/
+}
+#header-top
+{
+	background-color: #A31919;
+	text-align: center;
+	margin: 0;
+	padding: 7px;
+	font-size: 16px;
+	color: black;
+	font-family: Arial;
+	font-weight: bold;
+	font-style: italic;
+
+}
+
+#header-top1 /*Εδώ βρίσκεται το ρολόι γι' αυτό και η αλλαγή σε στυλ, στο που βρίσκεται και στη γραμματοσειρά!*/
+{
+	background-color: #FFFFCC;
+	text-align: right;
+	margin: 0;
+	padding: 5px;
+	font-size: 12px;
+	color: black;
+	border-bottom: 1px dashed #660066;
+
+
+}
+
+#header-bottom /*Εδώ */
+{
+	background-color: #FFFFCC;
+	padding: 5px;
+	text-align: center;
+	margin: 0;
+	color: #8C2A32;
+
+}
+
+.newcolor
+{
+	background-color: #A31919;
+}
+/* Αρχή μορφοποίησης nav και περιεχομένων του */
+nav
+{
+	margin: 0;
+	padding: 7px; /* Δίνουμε μικρή απόσταση μεταξύ περιγράμματος και περιεχομένου */
+	text-align: left;
+	/* Περίγραμμα (άνω) */
+	border-top: 1px dashed #660066;
+	font-size: 15px;
+	color: black;
+
+}
+
+nav ul
+{
+	margin: 0;
+	padding: 0;
+}
+
+nav ul li
+{
+	display: inline; /* Τα στοιχεία της λίστας θα εμφανίζονται στη σειρά και όχι το ένα κάτω από το άλλο */
+	margin: 0;
+	padding: 0;
+}/* Τέλος μορφοποίησης nav και περιεχομένων του */
+
+.searchkey
+{
+	border: 1px solid #DFDFDF;
+	color: #999999;
+	padding: 3px;
+	vertical-align: middle;
+}
+
+.ok
+{
+	padding: 3px;
+	vertical-align: middle;
+}
+
+form /*Είναι τα περιεχόμενα του μαθήματος, δηλαδή τα έγγραφα, η περιγραφή, η ανακοινώσεις κτλ*/
+{
+	margin: 0;
+	padding: 10px; /* Δίνουμε ένα κενό ανάμεσα στο border του nav και στο περιεχόμενο που αυτό περικλύει */
+	color: black;
+	text-align: left; 
+	font-size: 14px;
+	font-family: RockSalt;
+
 }
 
 /* Definition lists */
@@ -115,6 +219,19 @@ input[type=radio], input[type=checkbox], input[type=submit],
 input[type=reset], input[type=button], input[type=image] 
 { 
 	width: 150px; 
+}
+
+footer
+{
+	text-align:center;
+	width: 100%; /* Mέγεθος footer = μέγεθος body */
+	padding: 10px;
+}
+
+footer a
+{
+	color: #8C2A32;
+
 }
 
 @import url("class.css");
