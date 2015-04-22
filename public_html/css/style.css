@@ -6,7 +6,7 @@
 
 body 
 { 
-	text-align: center; 
+	text-align: left; 
 	background-color: #FFFFCC;
 	background-image: url('books.png'); /*Η εικόνα που θα βρίσκεται στο background αν κάποιος έχει μεγαλύτερη οθόνη.*/
 	font-family: "Arial Black",Arial, Gadget,Helvetica, sans-serif;
