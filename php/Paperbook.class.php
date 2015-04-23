@@ -3,6 +3,7 @@
 require_once "DataObject.class.php";
 require_once "Edition.class.php";
 require_once "Book.class.php";
+require_once "User.class.php";
 
 
 class Paperbook extends DataObject
@@ -79,6 +80,38 @@ class Paperbook extends DataObject
 					//       χρησιμοποιούμε το γεγονός ότι η έκδοση είναι παντού
 					//       ίδια.
 					array_push($paperbooks, self::get($row['id']));
+				}
+	
+				return $paperbooks;
+			}
+		}
+		catch ( PDOException $e )
+		{
+			parent::disconnect( $conn );
+			die( "Query failed: " . $e->getMessage() );
+		}
+	}
+	
+	public static function getByUser(User & $user)
+	{
+		$conn = parent::connect();
+		$sql = 'SELECT * FROM ' . TABLE_BORROWS . ' WHERE username = :username AND end_period is NULL';
+		try
+		{
+			$st = $conn-> prepare( $sql );
+			$st-> bindValue( ":username", $user-> getValueEncoded( "username" ), PDO::PARAM_STR);
+			$st-> execute();
+			$rows = $st-> fetchAll();
+			parent::disconnect( $conn );
+	
+			if ( $rows )
+			{
+				$paperbooks = array();
+				// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+				foreach ($rows as $row)
+				{
+					// Θέλει μία βελτιστοποίηση... Όποιος έχει όρεξη ας την κάνει ...
+					array_push($paperbooks, self::get($row['paperbook_id']));
 				}
 	
 				return $paperbooks;
@@ -231,6 +264,13 @@ class Paperbook extends DataObject
 		{ 
 			return false;
 		}
+	}
+	
+	public function lastStartBorrowDate()
+	{
+		$last_borrow = end($this->data['borrows']);
+	
+		return $last_borrow['start_period'];
 	}
 	
 	public function getBookTitleString()

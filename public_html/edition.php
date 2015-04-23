@@ -93,7 +93,20 @@ if ( isset($_GET["isbn"]) )
 				</td><td>
 				<?=$paperbook->getValueEncoded("binding");?>
 				</td><td>
-				<?php ?>
+				<?php 
+				if(!$paperbook->isBorrowed())
+				{
+					?>
+					Ναί
+					<?php 					
+				}
+				else 
+				{
+					?>
+					Όχι
+					<?php 					
+				}
+				?>
 				</td></tr>
 				<?php 
 			}

@@ -2,6 +2,7 @@
 
 require_once "common.inc.php";
 require_once "../php/User.class.php";
+require_once "../php/Paperbook.class.php";
 
 if(isset( $_POST["delete_id"]) && checkAdminLogin())
 {
@@ -82,25 +83,26 @@ elseif(checkLogin())
 	<dt> Email </dt> <dd> <?php echo $user-> getValueEncoded( "email" ) ?> </dd>
 	
 	</dl>
+	
+	
+	<!-- https://datatables.net/examples/basic_init/alt_pagination.html -->
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src="http://cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.6/css/jquery.dataTables.css"/>
+	<script type="text/javaScript">
+	$(document).ready(function() 
+	{
+		$('#pagination').dataTable( 
+	   	{
+		"pagingType": "full_numbers"
+		});
+	});		
+	</script>
+	
 	<?php
 	if($user->isAdmin())
 	{
-		?>
-		
-		<!-- https://datatables.net/examples/basic_init/alt_pagination.html -->
-		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-		<script src="http://cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.6/css/jquery.dataTables.css"/>
-		<script type="text/javaScript">
-			$(document).ready(function() 
-			{
-    			$('#pagination').dataTable( 
-    	    	{
-        			"pagingType": "full_numbers"
-    			});
-			});		
-		</script>
-		
+		?>		
 		<h2> Ενεργοί χρήστες </h2>
 	
 		<table id='pagination'>
@@ -164,13 +166,45 @@ elseif(checkLogin())
 		
 		</tbody>
 		</table>
-		
 		<?php		
+	}
+	else 
+	{
+		?>
+		<h2> Τα βιβλία που έχω </h2>
+		
+		<table id='pagination'>
+		<thead>
+		<tr><td> Τίτλος </td><td> Ημερομηνία ενοικίασης  </td></tr>
+		</thead>
+		<tfoot>
+		<tr><td> Τίτλος </td><td> Ημερομηνία ενοικίασης  </td></tr>
+		</tfoot>
+		<tbody>
+		<?php
+		if($books_rented = Paperbook::getByUser($user))
+		{
+			foreach ($books_rented as $book_rent)
+			{
+				?>
+					<tr><td>
+					<a href="book.php?id=<?=$book_rent->getBookId();?>"><?=$book_rent->getBookTitleString();?></a>
+					</td><td>
+					<?=$book_rent->lastStartBorrowDate();?>
+					</td><td>
+					<?php 
+				}
+			}
+			?>
+				
+			</tbody>
+			</table>
+	<?php 		
 	}
 }
 ?>
 
-<?php 
+<?php
 displayPageFooter()
 ?>
 

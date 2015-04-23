@@ -164,6 +164,20 @@ input[type=reset], input[type=button], input[type=image]
 { 
 	width: 150px; 
 }
+input.searchfield
+{ 
+  border: 1px solid; 
+  padding:2px;
+}
+
+input.searchbutton
+{ 
+  font-family: verdana, sans-serif;
+  border: 1px solid; 
+  padding: 0px 0px 1px 0px;
+  width: 95px;
+  cursor: pointer;
+}
 
 footer
 {

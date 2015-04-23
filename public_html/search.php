@@ -5,9 +5,9 @@ require_once "../php/Book.class.php";
 
 $search_parameter = "";
 
-if ( isset( $_GET["search"] ) )
+if ( isset( $_GET["title"] ) )
 {
-	$search_parameter = (string) $_GET["search"];
+	$search_parameter = strtoupper((string) $_GET["title"]);
 	
 	if($books= Book::search($search_parameter))
 	{

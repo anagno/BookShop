@@ -20,26 +20,83 @@ function displayPageHeader($page_title)
 
 <!DOCTYPE html>
 <html>
-	<head>
-		<!-- Προσθήκη της βιβλιοθήκης jquery -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-		
-		<!-- Εδώ μπαίνει η επικεφαλίδα -->
-		
-		<!-- Εδώ μπορεί να γίνεται έλεγχος του μεγέθους της οθόνης και 
-		     και να φορτώνονεται αντίστοιχα τα σωστά css. -->
-		<link rel="stylesheet" type="text/css" href="css/reset.css"/>
-		<link rel="stylesheet" type="text/css" href="css/style.css"/>
-		<link rel="stylesheet" type="text/css" href="css/class.css"/>
-	
-		<title><?php echo $page_title?></title>
-		
-		
-		
-	
-	</head>
-	<body>
-		<h1><?php echo $page_title?></h1>
+    <head>
+        <!-- Προσθήκη της βιβλιοθήκης jquery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+        <!--  <script src='js/clock.js'> 
+        </script>-->
+
+        <script type="text/javascript"> 
+          window.onload= function()
+          {
+            $('#wra').innerHTML= GetClock();
+            setTimeout("GetClock()", 1000);
+          }
+        </script>
+
+        <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="css/class.css"/>
+
+        <title><?php echo $page_title?></title>
+
+    </head>
+    <body>
+
+        <header>
+            <h1>Δημοτική Βιβλιοθήκη - Δήμος Διονύσου</h1>
+
+            <nav>
+                <ul id="menu">
+                    <li><a href="index.php">Αρχική</a></li>
+                    <?php 
+                    if (checkNotLogin())
+                    {
+                    ?>
+                    	<li><a href="login.php?location=<?=urlencode($_SERVER['REQUEST_URI'])?>">Σύνδεση</a></li>
+                    <?php 
+                    }
+                    else 
+                    {
+                    	if(checkAdminLogin())
+                    	{
+                    		?>
+                    		<li><a href="user.php">Χρήστες</a></li>
+                    		<?php 
+                    	}
+                    	else 
+                    	{
+                    		?>
+                    		<li><a href="user.php">Τα βιβλία μου</a></li>
+                    		<?php 
+                    	}
+                    	?>
+                    	<li><a href="logout.php">Αποσύνδεση</a></li>
+                    <?php 
+                    }
+                    ?>
+                    
+                </ul>
+
+                <div id="search">  
+                    <div id="wra" style="font:10pt Arial; color:#FFFFFF;">
+                    </div>      
+                    <form method="get" action="search.php?title=" >
+                        <input class="searchfield" type="text" name="title" maxlength="255" value="" />
+                        <input class="searchbutton" type="submit" value='Αναζήτηση'/>
+                    </form>
+                 </div>
+            </nav>
+
+        </header>
+
+        <article>
+            <div id="container">
+
+                <h2><?php echo $page_title?></h2>
+
+
 
 <?php 
 }
@@ -52,16 +109,18 @@ function displayPageHeader($page_title)
 function displayPageFooter()
 {?>
 
-	<footer>
-		Copyright &copy; tme119.anagno.me - 2015
-	</footer>
+            </div> <!-- content -->
+        </article>
 
-	</body>
+    <footer>
+        Copyright &copy; tme119.anagno.me - 2015
+    </footer>
+
+    </body>
 </html>
-	
+
 <?php 
 }?>
-
 
 <?php
 /**
