@@ -28,11 +28,11 @@ function displayPageHeader($page_title)
         </script>-->
 
         <script type="text/javascript"> 
-          window.onload= function()
-          {
-            $('#wra').innerHTML= GetClock();
-            setTimeout("GetClock()", 1000);
-          }
+        //  window.onload= function()
+        //  {
+        //    $('#wra').innerHTML= GetClock();
+        //    setTimeout("GetClock()", 1000);
+        //  }
         </script>
 
         <link rel="stylesheet" type="text/css" href="css/reset.css"/>
@@ -83,10 +83,10 @@ function displayPageHeader($page_title)
                     <div id="wra" style="font:10pt Arial; color:#FFFFFF;">
                     </div>      
                     <form method="get" action="search.php?title=" >
-                        <input class="searchfield" type="text" name="title" maxlength="255" value="" />
+                        <input class="searchfield" type="text" name="title" maxlength="255" value="" required />
                         <input class="searchbutton" type="submit" value='Αναζήτηση'/>
                     </form>
-                     &nbsp &nbsp<a href="search.php?title=">Όλα τα βιβλία</a>
+                    &nbsp &nbsp<a href="search.php?title=">Όλα τα βιβλία</a>
                  </div>
             </nav>
 
