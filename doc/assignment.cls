@@ -106,7 +106,7 @@ pdfborder = {0 0 0},
 %	CODE INCLUSION CONFIGURATION
 %----------------------------------------------------------------------------------------
 
-\RequirePackage[outputdir=bin]{minted}
+\RequirePackage[]{minted}
 \usemintedstyle{borland}
 %Να προσπαθήσω να ορίσω ως προεπιλογή το breaklines=true
 
