@@ -1,0 +1,4 @@
+# In .latex.yml
+compiler: xelatex
+
+root_file: doc/book.tex
