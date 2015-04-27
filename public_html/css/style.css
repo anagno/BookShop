@@ -14,6 +14,7 @@ body
 	color: black;
 	width: 1000px; /*Το μέγεθος της σελίδας σε πλάτος*/	
 	margin: 20px auto; /*Είναι το περιθώριο πάνω*/
+	padding: 10px;
 }
 
 #container
