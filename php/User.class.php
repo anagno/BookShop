@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once "DataObject.class.php";
 
@@ -236,9 +236,7 @@ class User extends DataObject
 	
 	public function getGenderString()
 	{
-		// Γαμώ τις αρχιδιές της php που αντί να μου το τραβά σαν bool
-		// θεωρεί ότι το ένα είναι string. Όποιος φτιάχνει untyped γλώσσες
-		// πρέπει να πεθάνει !!!
+		
 		
 		if ($this->data['gender'] ==="1")
 		{
@@ -252,9 +250,7 @@ class User extends DataObject
 	
 	/**
 	 * Για να μην αποθηκεύονται απ` ευθείας οι κωδικοί
-	 * Κανονίκα πρέπει να γίνει και salting εκός από hashing σε θεωρητικό επιπέδο
-	 * αλλά δεν νομίζω να ενδιαφερθεί και κανείς οπότε δεν γαμιέται
-	 * Όποιος έχει όρεξη ας το κάνει αλλιώς πολύ εινια και το md5 hash
+	 * Κανονίκα πρέπει να γίνει και salting εκτός από hashing σε θεωρητικό επιπέδο
 	 */
 	private static function passwordHash($password)
 	{
