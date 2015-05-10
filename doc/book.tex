@@ -146,6 +146,7 @@
 \end{center}
 \end{figure}
 
+\newpage
 \section{Φάση: Έναρξη}
 \label{section:inception}
 
@@ -373,7 +374,7 @@
 
 \end{description}
 
-
+\newpage
 \section{Φάση: Εκπόνηση Μελέτης}
 \label{section: Elaboration}
 
@@ -385,7 +386,7 @@
 
 Σε συνέχεια από την ενότητα \ref{section:inception} θα συνεχιστεί η ανάλυση απαιτήσεων με εμβάθυνση στις περιπτώσεις χρήσης. Συγκεκριμένα θα αναλυθούν οι ενέργειες που θα πρέπει να εκτελούνται από τους ενεργοποιούς του πληροφοριακού συστήματος. 
 Σχήμα \ref{fig:usecase_diagram_Users}
-\begin{landscape}
+%\begin{landscape}
 \begin{figure}
 \begin{center}
 \resizebox*{!}{!}{
@@ -394,7 +395,7 @@
 \label{fig:usecase_diagram_Users}
 \end{center}
 \end{figure}
-\end{landscape}
+%\end{landscape}
 %http://creately.com/diagram/example/hgmsd6in/Library+information+system
 %http://www.programsformca.com/2012/03/uml-diagrams-for-library-management.html
 
@@ -472,7 +473,7 @@
 
 \begin{figure}
 \begin{center}
-\resizebox*{!}{!}{
+\resizebox*{0.95\textwidth}{!}{
 \includegraphics{images/second/StatechartDiagram.jpg}}
 \caption{Διάγραμμα καταστάσεων για ένα βιβλίο} 
 \label{fig:statechart_diagram_book}
@@ -492,7 +493,7 @@
 
 \begin{figure}
 \begin{center}
-\resizebox*{!}{!}{
+\resizebox*{0.90\textwidth}{!}{
 \includegraphics{images/second/ObjectDiagram.jpg}}
 \caption{Διάγραμμα αντικειμένων} 
 \label{fig:object_diagramm}
@@ -501,7 +502,7 @@
 
 
 
-
+\newpage
 \section{Φάση: Κατασκευή}
 
 %During the Construction phase most of the code production and test activities are performed. It is expected that the Elaboration phase produces an architecture sufficiently stable so that its refactoring will be minimized during this phase \cite{wazlawick2014object}.
@@ -512,7 +513,7 @@
 
 Σε συνέχεια από την ενότητα \ref{section: Elaboration} έχουμε:
 
-Στο σχήμα \ref{fig:activity_diagram_rent_book_extended} φαίνεται το εκτενές σχήμα του διαγράμματος δραστηριότητας της ενοικίασης ενός βιβλίου και στο σχήμα \ref{fig:activity_diagram_reτurn_book_extended} φαίνεται το εκτενές σχήμα του διαγράμματος δραστηριότητας επιστροφής βιβλίου.
+Στο σχήμα \ref{fig:activity_diagram_rent_book_extended} φαίνεται το εκτενές σχήμα του διαγράμματος δραστηριότητας της ενοικίασης ενός βιβλίου και στο σχήμα \ref{fig:activity_diagram_return_book_extended} φαίνεται το εκτενές σχήμα του διαγράμματος δραστηριότητας επιστροφής βιβλίου.
 \begin{figure}
 \begin{center}
 \resizebox*{!}{!}{
@@ -555,7 +556,7 @@
 
 
 
-\section{Υλοποίηση της Βάσης Δεδομένων}
+\subsection{Υλοποίηση της Βάσης Δεδομένων}
 
 Σε αυτή την ενότητα περιγράφεται η υλοποίηση της βάσης δεδομένων στο ΣΔΒΔ της MariaDB η οποία είναι ένα fork της MySQL.
 
@@ -564,8 +565,13 @@
 
 \begin{figure}
 \begin{center}
+<<<<<<< HEAD
 \resizebox*{!}{!}{
 \includegraphics{images/third/CompomentDiagram.png}
+=======
+\resizebox*{0.80\textwidth}{!}{
+\includegraphics{images/third/CompomentDiagram.png}}
+>>>>>>> origin/master
 \caption{Το διάγραμμα εξαρτημάτων}
 \label{fig:component_diagram}
 \end{center}
@@ -574,8 +580,13 @@
 
 \begin{figure}
 \begin{center}
+<<<<<<< HEAD
 \resizebox*{!}{!}{
 \includegraphics{images/third/DeploymentDiagram.png}
+=======
+\resizebox*{0.80\textwidth}{!}{
+\includegraphics{images/third/DeploymentDiagram.png}}
+>>>>>>> origin/master
 \caption{Το διάγραμμα διανομής}
 \label{fig:deployment_diagram}
 \end{center}
@@ -930,7 +941,7 @@ MariaDB [tme119]> describe borrows;
 \begin{landscape}
 \begin{figure}
 \begin{center}
-\resizebox*{23.5cm}{!}{
+\resizebox*{!}{!}{
 \includegraphics{images/third/UseCaseDiagram.jpg}}
 \caption{Διάγραμμα περιπτώσεων χρήσης}
 \label{fig:Use_case_Diagram}
@@ -946,7 +957,7 @@ MariaDB [tme119]> describe borrows;
 
 \begin{figure}
 \begin{center}
-\resizebox*{23.5cm}{!}{
+\resizebox*{!}{!}{
 \includegraphics{images/third/CollaborationDiagramRentBook.jpg}}
 \caption{Διάγραμμα συνεργασίας δανεισμού βιβλίου}
 \label{fig:collaboration_rent_diagram}
@@ -956,7 +967,7 @@ MariaDB [tme119]> describe borrows;
 
 \begin{figure}
 \begin{center}
-\resizebox*{23.5cm}{!}{
+\resizebox*{!}{!}{
 \includegraphics{images/third/CollaborationDiagramReturnBook.jpg}}
 \caption{Διάγραμμα συνεργασίας επιστροφής βιβλίου}
 \label{fig:collaboration_return_diagram}
@@ -1000,7 +1011,7 @@ MariaDB [tme119]> describe borrows;
 
 \begin{figure}
 \begin{center}
-\resizebox*{23.5cm}{!}{
+\resizebox*{!}{!}{
 \includegraphics{images/third/SequenceDiagram.jpg}}
 \caption{Διάγραμμα σειράς}
 \label{fig:sequence_diagram}
