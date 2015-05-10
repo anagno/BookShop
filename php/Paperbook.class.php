@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once "DataObject.class.php";
 require_once "Edition.class.php";
@@ -35,8 +35,7 @@ class Paperbook extends DataObject
 					// Αλλά βαριέμαι. Είναι 3.35 το πρωί και συνηδητοποιώ ότι προτιμώ να δω το 
 					// jolene (http://www.imdb.com/title/tt0867334/) που παίζει στο STAR παρά να 
 					// βάλω το μυαλουδάκι μου και να διορθώσει αυτό το πρόβλημα.
-					// Ασχετο (όχι βέβαια ότι όλα τα άλλα που γράφω είναι σχετικά): Καλό πουτανάκι 
-					// ήταν και η jolene 
+					// Ασχετο (όχι βέβαια ότι όλα τα άλλα που γράφω είναι σχετικά)
 					$paperbook['borrows'] = $borrows;
 					parent::disconnect( $conn );					
 				}
